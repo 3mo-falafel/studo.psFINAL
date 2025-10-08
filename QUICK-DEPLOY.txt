@@ -1,0 +1,69 @@
+╔════════════════════════════════════════════════════════════════╗
+║                   🚀 DEPLOY IN 3 MINUTES 🚀                    ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+1️⃣  SSH INTO YOUR VPS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ssh root@31.97.97.28
+
+
+2️⃣  RUN THIS ONE COMMAND (copy all 8 lines together):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cd /var/www && \
+git clone https://github.com/3mo-falafel/studo.psFINAL.git studo-ecommerce && \
+cd studo-ecommerce && \
+npm install --production && \
+bash deploy-vps.sh && \
+pm2 start npm --name "studo-ecommerce" -- start -- -p 3002 && \
+pm2 save && \
+echo "✅ DONE! Visit http://31.97.72.28:3002"
+
+
+3️⃣  SETUP NGINX (copy all 12 lines together):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cat > /etc/nginx/sites-available/studo-ecommerce << 'NGINXEOF'
+server {
+    listen 80;
+    server_name studo.ps www.studo.ps 31.97.72.28;
+    location / {
+        proxy_pass http://localhost:3002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+NGINXEOF
+ln -sf /etc/nginx/sites-available/studo-ecommerce /etc/nginx/sites-enabled/ && \
+nginx -t && \
+systemctl reload nginx && \
+echo "✅ Nginx configured! Visit http://studo.ps"
+
+
+════════════════════════════════════════════════════════════════
+                          THAT'S IT! 
+════════════════════════════════════════════════════════════════
+
+Your site is live at:
+  🌐 http://31.97.72.28:3002
+  🌐 http://studo.ps
+
+
+OPTIONAL - Add SSL (just 2 commands):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+apt install certbot python3-certbot-nginx -y
+certbot --nginx -d studo.ps -d www.studo.ps
+
+After SSL: https://studo.ps 🔒
+
+
+USEFUL COMMANDS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+pm2 logs studo-ecommerce        # View logs
+pm2 restart studo-ecommerce     # Restart
+pm2 list                        # See all apps
+
+
+════════════════════════════════════════════════════════════════
