@@ -1,0 +1,902 @@
+"use client"
+
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+
+type Language = "ar" | "en"
+
+interface LanguageContextType {
+  language: Language
+  setLanguage: (lang: Language) => void
+  t: (key: string) => string
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<Language>("ar")
+
+  // Load language preference from localStorage on mount
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language") as Language | null
+    if (savedLanguage && (savedLanguage === "ar" || savedLanguage === "en")) {
+      setLanguageState(savedLanguage)
+      document.documentElement.dir = savedLanguage === "ar" ? "rtl" : "ltr"
+      document.documentElement.lang = savedLanguage
+    }
+  }, [])
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang)
+    localStorage.setItem("language", lang)
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr"
+    document.documentElement.lang = lang
+  }
+
+  const t = (key: string) => {
+    return translations[language]?.[key] || key
+  }
+
+  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+}
+
+export function useLanguage() {
+  const context = useContext(LanguageContext)
+  if (!context) {
+    throw new Error("useLanguage must be used within a LanguageProvider")
+  }
+  return context
+}
+
+// Translations object
+const translations: Record<Language, Record<string, string>> = {
+  ar: {
+    // Messages
+    loading: "جارٍ التحميل...",
+    error: "خطأ",
+    success: "نجح",
+    processing: "جارٍ المعالجة...",
+    noResults: "لم يتم العثور على نتائج",
+    tryAgain: "حاول مرة أخرى",
+    
+    // Shop & Filters
+    filters: "Filters",
+    sortBy: "Sort By",
+    priceRange: "Price Range",
+    availability: "Availability",
+    brand: "Brand",
+    applyFilters: "Apply Filters",
+    clearFilters: "Clear Filters",
+    showingResults: "Showing {count} products",
+    noProductsFound: "No products found",
+    sortNewest: "Newest",
+    sortPriceLowHigh: "Price: Low to High",
+    sortPriceHighLow: "Price: High to Low",
+    sortNameAZ: "Name: A-Z",
+    sortNameZA: "Name: Z-A",
+    
+    // Product Details
+    productDetails: "Product Details",
+    description: "Description",
+    features: "Features",
+    technicalSpecs: "Technical Specifications",
+    youMayAlsoLike: "You May Also Like",
+    addReview: "Add Review",
+    readReviews: "Read Reviews",
+    noReviews: "No reviews yet",
+    beFirstReview: "Be the first to review this product",
+    selectQuantity: "Select Quantity",
+    buyNow: "Buy Now",
+    shareProduct: "Share Product",
+    
+    // Cart
+    emptyCartMessage: "No products in your cart",
+    startShoppingNow: "Start Shopping Now",
+    itemsInCart: "{count} items in cart",
+    updateCart: "Update Cart",
+    clearCart: "Clear Cart",
+    cartSubtotal: "Cart Subtotal",
+    
+    // Checkout
+    checkoutTitle: "Checkout",
+    billingDetails: "Billing Details",
+    shippingDetails: "Shipping Details",
+    firstName: "First Name",
+    lastName: "Last Name",
+    phoneNumber: "Phone Number",
+    address: "Address",
+    city: "City",
+    postalCode: "Postal Code",
+    country: "Country",
+    state: "State",
+    deliveryNotes: "Delivery Notes",
+    paymentDetails: "Payment Details",
+    cashOnDelivery: "Cash on Delivery",
+    creditCard: "Credit Card",
+    orderTotal: "Order Total",
+    agreeToTerms: "I agree to the terms and conditions",
+    
+    // Account
+    accountOverview: "Account Overview",
+    personalInfo: "Personal Information",
+    orderHistory: "Order History",
+    savedAddresses: "Saved Addresses",
+    accountSettings: "Account Settings",
+    editProfile: "Edit Profile",
+    changePassword: "Change Password",
+    orderNumber: "Order Number",
+    orderDate: "Order Date",
+    orderStatus: "Order Status",
+    orderDetails: "Order Details",
+    viewOrder: "View Order",
+    trackShipment: "Track Shipment",
+    pending: "Pending",
+    processingStatus: "Processing",
+    shipped: "Shipped",
+    delivered: "Delivered",
+    cancelled: "Cancelled",
+    
+    // Auth
+    signInToAccount: "Sign in to your account",
+    createNewAccount: "Create a new account",
+    rememberMe: "Remember me",
+    or: "Or",
+    continueWithGoogle: "Continue with Google",
+    alreadyHaveAccount: "Already have an account?",
+    dontHaveAccount: "Don't have an account?",
+    enterEmail: "Enter your email",
+    enterPassword: "Enter your password",
+    enterFullName: "Enter your full name",
+    passwordRequirements: "Password must be at least 8 characters",
+    
+    // Wishlist
+    myWishlist: "My Wishlist",
+    wishlistEmpty: "Your wishlist is empty",
+    addAllToCart: "Add All to Cart",
+    moveToCart: "Move to Cart",
+    
+    // Track Order
+    trackYourOrder: "Track Your Order",
+    enterOrderNumber: "Enter Order Number",
+    orderTracking: "Order Tracking",
+    
+    // General Actions
+    save: "Save",
+    cancel: "Cancel",
+    edit: "Edit",
+    delete: "Delete",
+    confirm: "Confirm",
+    back: "Back",
+    next: "Next",
+    previous: "Previous",
+    close: "Close",
+    apply: "Apply",
+    reset: "Reset",
+    submit: "Submit",
+    update: "Update",
+  },
+  en: {
+    // Navigation
+    home: "Home",
+    shop: "Shop",
+    categories: "Categories",
+    allCategories: "All Categories",
+    browseByCategory: "Browse by Category",
+    products: "Products",
+    cart: "Cart",
+    wishlist: "Wishlist",
+    account: "Account",
+    login: "Login",
+    logout: "Logout",
+    signup: "Sign Up",
+    search: "Search",
+    searchPlaceholder: "Search for products...",
+    
+    // Common
+    viewAll: "View All",
+    seeMore: "See More",
+    learnMore: "Learn More",
+    continueShopping: "Continue Shopping",
+    checkout: "Checkout",
+    total: "Total",
+    subtotal: "Subtotal",
+    shipping: "Shipping",
+    tax: "Tax",
+    free: "Free",
+    products: "Products",
+    featured: "Featured",
+    new: "New",
+    sale: "Sale",
+    outOfStock: "Out of Stock",
+    inStock: "In Stock",
+    available: "available",
+    price: "Price",
+    quantity: "Quantity",
+    remove: "Remove",
+    
+    // Toast messages
+    addedToCart: "Added to Cart",
+    addedToWishlist: "Added to Wishlist",
+    removedFromCart: "Removed from Cart",
+    removedFromWishlist: "Removed from Wishlist",
+    addedToCartDesc: "{name} has been added to your cart.",
+    addedToWishlistDesc: "{name} has been added to your wishlist.",
+    removedFromWishlistDesc: "{name} has been removed from your wishlist.",
+    itemAddedToCart: "{quantity} × {name} has been added to your cart",
+    itemAddedToWishlist: "{name} has been added to your wishlist",
+    itemRemovedFromWishlist: "{name} has been removed from your wishlist",
+    itemRemovedFromCart: "{name} has been removed from your cart",
+  },
+}
+    categories: "التصنيفات",
+    trackOrder: "تتبع الطلب",
+    about: "من نحن",
+    contact: "اتصل بنا",
+    cart: "السلة",
+    wishlist: "المفضلة",
+    account: "حسابي",
+    login: "تسجيل دخول",
+    signup: "تسجيل",
+    logout: "تسجيل الخروج",
+
+    // Hero Section - Modern Hero
+    specialOfferBadge: "🎉 اكسب حتى 15% خصم على طلبك القادم!",
+    heroMainTitle1: "جودة أصلية،",
+    heroMainTitle2: "أسعار طلابية",
+    heroMainTitle3: "من الطلاب، للطلاب",
+    heroDescription1: "منتجات أصلية 100%.",
+    heroDescription2: "آيباد، مواد مطبوعة، إكسسوارات كمبيوتر والمزيد.",
+    heroDescription3: "من طالب لطالب.",
+    heroDescription4: "جودة يمكنك الثقة بها.",
+    startShopping: "ابدأ التسوق",
+    learnMoreDiscount: "اعرف المزيد عن الخصومات",
+    
+    // Discount Dialog
+    discountDialogTitle: "كيف تحصل على خصم 15%؟",
+    discountDialogDescription: "اربح نقاط مكافآت مع كل عملية شراء واستبدلها بخصومات!",
+    howItWorksTitle: "كيف يعمل؟",
+    earnPointsTitle: "1. اكسب النقاط",
+    earnPointsDesc: "احصل على 1 نقطة لكل 10 شيكل تنفقه في متجرنا.",
+    redeemPointsTitle: "2. استبدل النقاط",
+    redeemPointsDesc: "كل 100 نقطة = خصم 15 شيكل على طلبك القادم.",
+    savingsTitle: "3. احفظ أكثر",
+    savingsDesc: "كلما تسوقت أكثر، كلما ربحت أكثر! بدون تاريخ انتهاء صلاحية.",
+    exampleTitle: "مثال:",
+    exampleText: "اشترِ بقيمة 1,000 شيكل → احصل على 100 نقطة → احصل على 15 شيكل خصم!",
+    gotIt: "فهمت!",
+    
+    // Features
+    freeShippingTitle: "توصيل مجاني",
+    freeShippingDesc: "داخل جامعة بيرزيت",
+    freePickupTitle: "استلام مجاني",
+    freePickupDesc: "من قرية بلعين",
+    oneYearWarrantyTitle: "ضمان سنة كاملة",
+    oneYearWarrantyDesc: "جودة مضمونة",
+    loyaltyRewardsTitle: "مكافآت الولاء",
+    loyaltyRewardsDesc: "خصومات حصرية",
+    studentPricesTitle: "أسعار طلابية",
+    studentPricesDesc: "خصومات حصرية للطلاب",
+    originalProductsTitle: "منتجات أصلية",
+    originalProductsDesc: "ضمان الجودة 100%",
+    
+    // Discount Dialog Details
+    howGetDiscountCodes: "كيف تحصل على كودات الخصم",
+    shopMoreSaveMore: "تسوق أكثر، وفّر أكثر! احصل على مكافآت مع رموز خصم لشرائك القادم.",
+    howItWorks: "🎯 كيف يعمل؟",
+    step1: "أكمل عملية الشراء على Studo.ps",
+    step2: "احصل على كود الخصم فوراً على صفحة النجاح",
+    step3: "احفظ الكود (صالح لمدة 90 يوماً)",
+    step4: "استخدمه في طلبك القادم لتوفير المال!",
+    discountTiers: "💰 مستويات الخصم",
+    discount5: "خصم 5%",
+    discount10: "خصم 10%",
+    discount15: "خصم 15%",
+    buyForAmount: "اشترِ بـ",
+    orMore: "أو أكثر",
+    getCode: "واحصل على",
+    forNextPurchase: "لعملية الشراء القادمة",
+    codeFormat: "صيغة الكود:",
+    importantNotes: "⚠️ ملاحظات مهمة",
+    oneTimeUse: "الكودات تُستخدم مرة واحدة فقط - بمجرد الاستخدام، تنتهي صلاحيتها",
+    validFor90Days: "صالحة لمدة 90 يوماً من تاريخ استلامها",
+    applyAtCheckout: "يُطبّق الخصم عند الدفع على إجمالي المبلغ",
+    cannotCombine: "لا يمكن دمجها مع كودات أخرى",
+    noMinimum: "لا يوجد حد أدنى لاستخدام الكود",
+    higherOrderHigherDiscount: "كلما زاد طلبك، زاد خصمك القادم!",
+    
+    // Category Slots
+    iPadPensSlot: "أقلام آيباد",
+    iPadPensDesc: "أدوات دقيقة",
+    airpodsSlot: "إيربودز",
+    airpodsDesc: "أحدث الموديلات",
+    chargersSlot: "شواحن",
+    chargersDesc: "شحن سريع",
+    printedSlot: "مطبوعات",
+    printedDesc: "تصاميم مخصصة",
+    
+    // Category Names
+    ipadAccessories: "إكسسوارات آيباد",
+    airpodsCategory: "إيربودز",
+    phoneAccessories: "إكسسوارات الهاتف",
+    computerAccessories: "إكسسوارات الكمبيوتر",
+    chargersCategory: "الشواحن",
+    hardDisksCategory: "أقراص صلبة",
+    printedStuffCategory: "مواد مطبوعة",
+    giftPackagesCategory: "باكجات الهدايا",
+    bagsCategory: "حقائب",
+    
+    // Hero Banner
+    heroBannerTitle: "جودة أصلية، أسعار طلابية",
+    heroBannerSubtitle: "من الطلاب، للطلاب",
+    heroBannerDescription: "اكتشف أفضل إكسسوارات التكنولوجيا بأسعار مناسبة للطلاب. توصيل مجاني لجامعة بيرزيت!",
+    shopNow: "تسوق الآن",
+    
+    // Section Titles
+    shopByCategory: "تسوق حسب التصنيف",
+    browseProducts: "تصفح مجموعتنا الواسعة من المنتجات",
+    featuredProducts: "المنتجات المميزة",
+    handPickedItems: "منتجات مختارة بعناية خصيصًا لك",
+    newArrivals: "الجديد",
+    latestProducts: "تحقق من أحدث منتجاتنا",
+    
+    // Common
+    search: "بحث",
+    addToCart: "أضف للسلة",
+    addToWishlist: "أضف للمفضلة",
+    viewDetails: "عرض التفاصيل",
+    learnMore: "اعرف المزيد",
+    continueShopping: "تابع التسوق",
+    checkout: "الدفع",
+    total: "المجموع",
+    subtotal: "المجموع الفرعي",
+    shipping: "الشحن",
+    tax: "الضريبة",
+    free: "مجاني",
+    products: "المنتجات",
+    featured: "مميز",
+    new: "جديد",
+    sale: "تخفيض",
+    outOfStock: "نفذ من المخزون",
+    inStock: "متوفر",
+    available: "قطعة متاحة",
+    price: "السعر",
+    quantity: "الكمية",
+    remove: "إزالة",
+    
+    // Toast messages
+    addedToCart: "تمت الإضافة للسلة",
+    addedToWishlist: "تمت الإضافة للمفضلة",
+    removedFromCart: "تمت الإزالة من السلة",
+    removedFromWishlist: "تمت الإزالة من المفضلة",
+    addedToCartDesc: "تمت إضافة {name} إلى سلة المشتريات.",
+    addedToWishlistDesc: "تمت إضافة {name} إلى قائمة المفضلة.",
+    removedFromWishlistDesc: "تمت إزالة {name} من قائمة المفضلة.",
+    itemAddedToCart: "{quantity} × {name} تمت إضافته لسلة التسوق",
+    itemAddedToWishlist: "تمت إضافة {name} لقائمة المفضلة",
+    itemRemovedFromWishlist: "تمت إزالة {name} من قائمة المفضلة",
+    itemRemovedFromCart: "تمت إزالة {name} من سلة التسوق",
+
+    // Product
+    productDescription: "وصف المنتج",
+    relatedProducts: "منتجات ذات صلة",
+    reviews: "التقييمات",
+    specifications: "المواصفات",
+
+    // Cart & Checkout
+    shoppingCart: "سلة التسوق",
+    cartEmpty: "سلة التسوق فارغة",
+    orderSummary: "ملخص الطلب",
+    proceedToCheckout: "متابعة إلى الدفع",
+    placeOrder: "تأكيد الطلب",
+    contactInformation: "معلومات التواصل",
+    deliveryMethod: "طريقة التوصيل",
+    paymentMethod: "طريقة الدفع",
+    deliveryAddress: "عنوان التوصيل",
+    orderNotes: "ملاحظات الطلب",
+
+    // Account
+    myAccount: "حسابي",
+    orders: "الطلبات",
+    addresses: "العناوين",
+    overview: "نظرة عامة",
+    recentOrders: "الطلبات الأخيرة",
+    totalOrders: "إجمالي الطلبات",
+    viewAll: "عرض الكل",
+
+    // Auth
+    welcomeBack: "مرحباً بعودتك",
+    createAccount: "إنشاء حساب",
+    signIn: "تسجيل الدخول",
+    signUp: "تسجيل",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    confirmPassword: "تأكيد كلمة المرور",
+    fullName: "الاسم الكامل",
+    forgotPassword: "نسيت كلمة المرور؟",
+    noAccount: "ليس لديك حساب؟",
+    haveAccount: "لديك حساب بالفعل؟",
+
+    // Footer
+    quickLinks: "روابط سريعة",
+    customerService: "خدمة العملاء",
+    contactUs: "اتصل بنا",
+    followUs: "تابعنا",
+    allRightsReserved: "جميع الحقوق محفوظة",
+    trustedSource: "مصدرك الموثوق لإكسسوارات التكنولوجيا الأصلية. منتجات عالية الجودة بأسعار تنافسية.",
+    shopAllProducts: "تسوق جميع المنتجات",
+    trackOrders: "تتبع الطلبات",
+    shippingInfo: "معلومات الشحن",
+    returnsRefunds: "الإرجاع والاسترداد",
+    palestine: "فلسطين",
+    messageWhatsApp: "راسلنا على واتساب",
+    newsletter: "النشرة الإخبارية",
+    yourEmail: "بريدك الإلكتروني",
+    subscribe: "اشترك",
+    
+    // Messages
+    loading: "جارٍ التحميل...",
+    error: "خطأ",
+    success: "نجح",
+    processing: "جارٍ المعالجة...",
+    noResults: "لا توجد نتائج",
+    tryAgain: "حاول مرة أخرى",
+    
+    // Shop & Filters
+    filters: "الفلاتر",
+    sortBy: "ترتيب حسب",
+    priceRange: "نطاق السعر",
+    availability: "التوفر",
+    brand: "العلامة التجارية",
+    applyFilters: "تطبيق الفلاتر",
+    clearFilters: "مسح الفلاتر",
+    showingResults: "عرض {count} منتج",
+    noProductsFound: "لم يتم العثور على منتجات",
+    sortNewest: "الأحدث",
+    sortPriceLowHigh: "السعر: من الأقل للأعلى",
+    sortPriceHighLow: "السعر: من الأعلى للأقل",
+    sortNameAZ: "الاسم: أ-ي",
+    sortNameZA: "الاسم: ي-أ",
+    
+    // Product Details
+    productDetails: "تفاصيل المنتج",
+    description: "الوصف",
+    features: "المميزات",
+    technicalSpecs: "المواصفات التقنية",
+    youMayAlsoLike: "قد يعجبك أيضاً",
+    addReview: "إضافة تقييم",
+    readReviews: "قراءة التقييمات",
+    noReviews: "لا توجد تقييمات بعد",
+    beFirstReview: "كن أول من يقيّم هذا المنتج",
+    selectQuantity: "اختر الكمية",
+    buyNow: "اشتري الآن",
+    shareProduct: "مشاركة المنتج",
+    fastDelivery: "توصيل سريع",
+    freeShippingOver: "توصيل مجاني على الطلبات فوق 5,000 ₪",
+    qualityGuarantee: "ضمان الجودة",
+    returnPolicy: "سياسة استرجاع لمدة 30 يوماً على جميع المنتجات",
+    securePackaging: "تغليف آمن",
+    carefullyPacked: "جميع المنتجات مغلفة بعناية للتوصيل الآمن",
+    
+    // Cart
+    emptyCartMessage: "لا توجد منتجات في سلة التسوق",
+    startShoppingNow: "ابدأ التسوق الآن",
+    itemsInCart: "{count} منتج في السلة",
+    updateCart: "تحديث السلة",
+    clearCart: "إفراغ السلة",
+    cartSubtotal: "المجموع الفرعي",
+    
+    // Checkout
+    checkoutTitle: "إتمام الطلب",
+    billingDetails: "تفاصيل الفاتورة",
+    shippingDetails: "تفاصيل الشحن",
+    firstName: "الاسم الأول",
+    lastName: "اسم العائلة",
+    phoneNumber: "رقم الهاتف",
+    address: "العنوان",
+    city: "المدينة",
+    postalCode: "الرمز البريدي",
+    country: "الدولة",
+    state: "المحافظة",
+    deliveryNotes: "ملاحظات التوصيل",
+    paymentDetails: "تفاصيل الدفع",
+    cashOnDelivery: "الدفع عند الاستلام",
+    creditCard: "بطاقة ائتمان",
+    orderTotal: "إجمالي الطلب",
+    agreeToTerms: "أوافق على الشروط والأحكام",
+    
+    // Account
+    accountOverview: "نظرة عامة على الحساب",
+    personalInfo: "المعلومات الشخصية",
+    orderHistory: "سجل الطلبات",
+    savedAddresses: "العناوين المحفوظة",
+    accountSettings: "إعدادات الحساب",
+    editProfile: "تعديل الملف الشخصي",
+    changePassword: "تغيير كلمة المرور",
+    orderNumber: "رقم الطلب",
+    orderDate: "تاريخ الطلب",
+    orderStatus: "حالة الطلب",
+    orderDetails: "تفاصيل الطلب",
+    viewOrder: "عرض الطلب",
+    trackShipment: "تتبع الشحنة",
+    pending: "قيد الانتظار",
+    processingStatus: "قيد المعالجة",
+    shipped: "تم الشحن",
+    delivered: "تم التوصيل",
+    cancelled: "ملغي",
+    
+    // Auth
+    signInToAccount: "تسجيل الدخول لحسابك",
+    createNewAccount: "إنشاء حساب جديد",
+    rememberMe: "تذكرني",
+    or: "أو",
+    continueWithGoogle: "متابعة بحساب جوجل",
+    alreadyHaveAccount: "لديك حساب بالفعل؟",
+    dontHaveAccount: "ليس لديك حساب؟",
+    signInToContinue: "سجل دخول لحسابك للمتابعة",
+    signUpToGetStarted: "سجل للبدء بالتسوق",
+    signUpNow: "سجل الآن",
+    signInNow: "سجل دخول",
+    enterEmail: "أدخل بريدك الإلكتروني",
+    enterPassword: "أدخل كلمة المرور",
+    enterFullName: "أدخل اسمك الكامل",
+    passwordRequirements: "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    
+    // Wishlist
+    myWishlist: "قائمة المفضلة",
+    wishlistEmpty: "قائمة المفضلة فارغة",
+    addAllToCart: "إضافة الكل للسلة",
+    moveToCart: "نقل إلى السلة",
+    
+    // Track Order
+    trackYourOrder: "تتبع طلبك",
+    enterOrderNumber: "أدخل رقم الطلب",
+    orderTracking: "تتبع الطلب",
+    
+    // General Actions
+    save: "حفظ",
+    cancel: "إلغاء",
+    edit: "تعديل",
+    delete: "حذف",
+    confirm: "تأكيد",
+    back: "رجوع",
+    next: "التالي",
+    previous: "السابق",
+    close: "إغلاق",
+    apply: "تطبيق",
+    reset: "إعادة تعيين",
+    submit: "إرسال",
+    update: "تحديث",
+  },
+  en: {
+    // Navigation
+    home: "Home",
+    shop: "Shop",
+    categories: "Categories",
+    trackOrder: "Track Order",
+    about: "About",
+    contact: "Contact",
+    cart: "Cart",
+    wishlist: "Wishlist",
+    account: "Account",
+    login: "Login",
+    signup: "Sign Up",
+    logout: "Logout",
+
+    // Hero Section - Modern Hero
+    specialOfferBadge: "🎉 Earn up to 15% discount on your next order!",
+    heroMainTitle1: "Original Quality,",
+    heroMainTitle2: "Student Prices",
+    heroMainTitle3: "From Students, For Students",
+    heroDescription1: "100% Original Products.",
+    heroDescription2: "iPad, printed materials, computer accessories and more.",
+    heroDescription3: "From student to student.",
+    heroDescription4: "Quality you can trust.",
+    startShopping: "Start Shopping",
+    learnMoreDiscount: "Learn More About Discounts",
+    
+    // Discount Dialog
+    discountDialogTitle: "How to Get 15% Discount?",
+    discountDialogDescription: "Earn reward points with every purchase and redeem them for discounts!",
+    howItWorksTitle: "How It Works?",
+    earnPointsTitle: "1. Earn Points",
+    earnPointsDesc: "Get 1 point for every 10 ILS you spend in our store.",
+    redeemPointsTitle: "2. Redeem Points",
+    redeemPointsDesc: "Every 100 points = 15 ILS discount on your next order.",
+    savingsTitle: "3. Save More",
+    savingsDesc: "The more you shop, the more you earn! No expiration date.",
+    exampleTitle: "Example:",
+    exampleText: "Buy for 1,000 ILS → Get 100 points → Get 15 ILS discount!",
+    gotIt: "Got it!",
+    
+    // Features
+    freeShippingTitle: "Free Shipping",
+    freeShippingDesc: "Within Birzeit University",
+    freePickupTitle: "Free Pickup",
+    freePickupDesc: "From Bil'in Village",
+    oneYearWarrantyTitle: "1 Year Warranty",
+    oneYearWarrantyDesc: "Guaranteed Quality",
+    loyaltyRewardsTitle: "Loyalty Rewards",
+    loyaltyRewardsDesc: "Exclusive Discounts",
+    studentPricesTitle: "Student Prices",
+    studentPricesDesc: "Exclusive discounts for students",
+    originalProductsTitle: "Original Products",
+    originalProductsDesc: "100% Quality Guarantee",
+    
+    // Discount Dialog Details
+    howGetDiscountCodes: "How to Get Discount Codes",
+    shopMoreSaveMore: "Shop more, save more! Get rewarded with discount codes for your next purchase.",
+    howItWorks: "🎯 How It Works?",
+    step1: "Complete your purchase on Studo.ps",
+    step2: "Get discount code instantly on success page",
+    step3: "Save the code (valid for 90 days)",
+    step4: "Use it on your next order to save money!",
+    discountTiers: "💰 Discount Tiers",
+    discount5: "5% Discount",
+    discount10: "10% Discount",
+    discount15: "15% Discount",
+    buyForAmount: "Buy for",
+    orMore: "or more",
+    getCode: "and get",
+    forNextPurchase: "for next purchase",
+    codeFormat: "Code format:",
+    importantNotes: "⚠️ Important Notes",
+    oneTimeUse: "Codes are one-time use only - once redeemed, they expire",
+    validFor90Days: "Valid for 90 days from receipt date",
+    applyAtCheckout: "Discount applies at checkout on total amount",
+    cannotCombine: "Cannot be combined with other codes",
+    noMinimum: "No minimum order required to use code",
+    higherOrderHigherDiscount: "The higher your order, the bigger your next discount!",
+    
+    // Category Slots
+    iPadPensSlot: "iPad Pencils",
+    iPadPensDesc: "Precision Tools",
+    airpodsSlot: "AirPods",
+    airpodsDesc: "Latest Models",
+    chargersSlot: "Chargers",
+    chargersDesc: "Fast Charging",
+    printedSlot: "Printed Materials",
+    printedDesc: "Custom Designs",
+    
+    // Category Names
+    ipadAccessories: "iPad Accessories",
+    airpodsCategory: "AirPods",
+    phoneAccessories: "Phone Accessories",
+    computerAccessories: "Computer Accessories",
+    chargersCategory: "Chargers",
+    hardDisksCategory: "Hard Disks",
+    printedStuffCategory: "Printed Materials",
+    giftPackagesCategory: "Gift Packages",
+    bagsCategory: "Bags",
+    
+    // Hero Banner
+    heroBannerTitle: "Original Quality, Student Prices",
+    heroBannerSubtitle: "From Students, For Students",
+    heroBannerDescription: "Discover the best tech accessories at student-friendly prices. Free delivery to Birzeit University!",
+    shopNow: "Shop Now",
+    
+    // Section Titles
+    shopByCategory: "Shop by Category",
+    browseProducts: "Browse our wide range of products",
+    featuredProducts: "Featured Products",
+    handPickedItems: "Hand-picked items just for you",
+    newArrivals: "New Arrivals",
+    latestProducts: "Check out our latest products",
+    
+    // Common
+    search: "Search",
+    addToCart: "Add to Cart",
+    addToWishlist: "Add to Wishlist",
+    viewDetails: "View Details",
+    learnMore: "Learn More",
+    continueShopping: "Continue Shopping",
+    checkout: "Checkout",
+    total: "Total",
+    subtotal: "Subtotal",
+    shipping: "Shipping",
+    tax: "Tax",
+    free: "Free",
+    products: "Products",
+    featured: "Featured",
+    new: "New",
+    sale: "Sale",
+    outOfStock: "Out of Stock",
+    inStock: "In Stock",
+    available: "available",
+    price: "Price",
+    quantity: "Quantity",
+    remove: "Remove",
+    
+    // Toast messages
+    addedToCart: "Added to Cart",
+    addedToWishlist: "Added to Wishlist",
+    removedFromCart: "Removed from Cart",
+    removedFromWishlist: "Removed from Wishlist",
+    addedToCartDesc: "{name} has been added to your cart.",
+    addedToWishlistDesc: "{name} has been added to your wishlist.",
+    removedFromWishlistDesc: "{name} has been removed from your wishlist.",
+    itemAddedToCart: "{quantity} × {name} has been added to your cart",
+    itemAddedToWishlist: "{name} has been added to your wishlist",
+    itemRemovedFromWishlist: "{name} has been removed from your wishlist",
+    itemRemovedFromCart: "{name} has been removed from your cart",
+
+    // Product
+    productDescription: "Product Description",
+    relatedProducts: "Related Products",
+    reviews: "Reviews",
+    specifications: "Specifications",
+
+    // Cart & Checkout
+    shoppingCart: "Shopping Cart",
+    cartEmpty: "Cart is Empty",
+    orderSummary: "Order Summary",
+    proceedToCheckout: "Proceed to Checkout",
+    placeOrder: "Place Order",
+    contactInformation: "Contact Information",
+    deliveryMethod: "Delivery Method",
+    paymentMethod: "Payment Method",
+    deliveryAddress: "Delivery Address",
+    orderNotes: "Order Notes",
+
+    // Account
+    myAccount: "My Account",
+    orders: "Orders",
+    addresses: "Addresses",
+    overview: "Overview",
+    recentOrders: "Recent Orders",
+    totalOrders: "Total Orders",
+    viewAll: "View All",
+
+    // Auth
+    welcomeBack: "Welcome Back",
+    createAccount: "Create Account",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    email: "Email",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+    fullName: "Full Name",
+    forgotPassword: "Forgot Password?",
+    noAccount: "Don't have an account?",
+    haveAccount: "Already have an account?",
+
+    // Footer
+    quickLinks: "Quick Links",
+    customerService: "Customer Service",
+    contactUs: "Contact Us",
+    followUs: "Follow Us",
+    allRightsReserved: "All Rights Reserved",
+    trustedSource: "Your trusted source for original tech accessories. High-quality products at competitive prices.",
+    shopAllProducts: "Shop All Products",
+    trackOrders: "Track Orders",
+    shippingInfo: "Shipping Info",
+    returnsRefunds: "Returns & Refunds",
+    palestine: "Palestine",
+    messageWhatsApp: "Message us on WhatsApp",
+    newsletter: "Newsletter",
+    yourEmail: "Your Email",
+    subscribe: "Subscribe",
+    
+    // Messages
+    loading: "Loading...",
+    error: "Error",
+    success: "Success",
+    processing: "Processing...",
+    noResults: "No Results",
+    tryAgain: "Try Again",
+    
+    // Shop & Filters
+    filters: "Filters",
+    sortBy: "Sort By",
+    priceRange: "Price Range",
+    availability: "Availability",
+    brand: "Brand",
+    applyFilters: "Apply Filters",
+    clearFilters: "Clear Filters",
+    showingResults: "Showing {count} products",
+    noProductsFound: "No products found",
+    sortNewest: "Newest",
+    sortPriceLowHigh: "Price: Low to High",
+    sortPriceHighLow: "Price: High to Low",
+    sortNameAZ: "Name: A-Z",
+    sortNameZA: "Name: Z-A",
+    
+    // Product Details
+    productDetails: "Product Details",
+    description: "Description",
+    features: "Features",
+    technicalSpecs: "Technical Specifications",
+    youMayAlsoLike: "You May Also Like",
+    addReview: "Add Review",
+    readReviews: "Read Reviews",
+    noReviews: "No reviews yet",
+    beFirstReview: "Be the first to review this product",
+    selectQuantity: "Select Quantity",
+    buyNow: "Buy Now",
+    shareProduct: "Share Product",
+    
+    // Cart
+    emptyCartMessage: "No products in your cart",
+    startShoppingNow: "Start Shopping Now",
+    itemsInCart: "{count} items in cart",
+    updateCart: "Update Cart",
+    clearCart: "Clear Cart",
+    cartSubtotal: "Cart Subtotal",
+    
+    // Checkout
+    checkoutTitle: "Checkout",
+    billingDetails: "Billing Details",
+    shippingDetails: "Shipping Details",
+    firstName: "First Name",
+    lastName: "Last Name",
+    phoneNumber: "Phone Number",
+    address: "Address",
+    city: "City",
+    postalCode: "Postal Code",
+    country: "Country",
+    state: "State",
+    deliveryNotes: "Delivery Notes",
+    paymentDetails: "Payment Details",
+    cashOnDelivery: "Cash on Delivery",
+    creditCard: "Credit Card",
+    orderTotal: "Order Total",
+    agreeToTerms: "I agree to the terms and conditions",
+    
+    // Account
+    accountOverview: "Account Overview",
+    personalInfo: "Personal Information",
+    orderHistory: "Order History",
+    savedAddresses: "Saved Addresses",
+    accountSettings: "Account Settings",
+    editProfile: "Edit Profile",
+    changePassword: "Change Password",
+    orderNumber: "Order Number",
+    orderDate: "Order Date",
+    orderStatus: "Order Status",
+    orderDetails: "Order Details",
+    viewOrder: "View Order",
+    trackShipment: "Track Shipment",
+    pending: "Pending",
+    processingStatus: "Processing",
+    shipped: "Shipped",
+    delivered: "Delivered",
+    cancelled: "Cancelled",
+    
+    // Auth
+    signInToAccount: "Sign in to your account",
+    createNewAccount: "Create a new account",
+    rememberMe: "Remember me",
+    or: "Or",
+    continueWithGoogle: "Continue with Google",
+    alreadyHaveAccount: "Already have an account?",
+    dontHaveAccount: "Don't have an account?",
+    enterEmail: "Enter your email",
+    enterPassword: "Enter your password",
+    enterFullName: "Enter your full name",
+    passwordRequirements: "Password must be at least 8 characters",
+    
+    // Wishlist
+    myWishlist: "My Wishlist",
+    wishlistEmpty: "Your wishlist is empty",
+    addAllToCart: "Add All to Cart",
+    moveToCart: "Move to Cart",
+    
+    // Track Order
+    trackYourOrder: "Track Your Order",
+    enterOrderNumber: "Enter Order Number",
+    orderTracking: "Order Tracking",
+    
+    // General Actions
+    save: "Save",
+    cancel: "Cancel",
+    edit: "Edit",
+    delete: "Delete",
+    confirm: "Confirm",
+    back: "Back",
+    next: "Next",
+    previous: "Previous",
+    close: "Close",
+    apply: "Apply",
+    reset: "Reset",
+    submit: "Submit",
+    update: "Update",
+  },
+}
