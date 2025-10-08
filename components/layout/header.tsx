@@ -25,37 +25,40 @@ export function Header() {
       <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm transition-all duration-300">
         <div className="container mx-auto px-4">
           <div className="flex h-16 md:h-20 items-center justify-between gap-4">
-            {/* Mobile menu */}
-            <Sheet>
-              <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-colors">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[280px]">
-                <nav className="flex flex-col gap-4 mt-8 px-4">
-                  <Link href="/" className="text-lg font-medium hover:text-primary transition-colors text-right">
-                    {t("home")}
-                  </Link>
-                  <Link href="/shop" className="text-lg font-medium hover:text-primary transition-colors text-right">
-                    {t("shop")}
-                  </Link>
-                  <Link href="/categories" className="text-lg font-medium hover:text-primary transition-colors text-right">
-                    {t("categories")}
-                  </Link>
-                  <Link href="/track-order" className="text-lg font-medium hover:text-primary transition-colors text-right">
-                    {t("trackOrder")}
-                  </Link>
-                  <Link href="/about" className="text-lg font-medium hover:text-primary transition-colors text-right">
-                    {t("about")}
-                  </Link>
-                  <Link href="/contact" className="text-lg font-medium hover:text-primary transition-colors text-right">
-                    {t("contact")}
-                  </Link>
-                </nav>
-              </SheetContent>
-            </Sheet>
+            {/* Mobile menu - Left Side */}
+            <div className="flex items-center lg:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-colors">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[280px]">
+                  <nav className="flex flex-col gap-4 mt-8 px-4">
+                    <Link href="/" className="text-lg font-medium hover:text-primary transition-colors text-right">
+                      {t("home")}
+                    </Link>
+                    <Link href="/shop" className="text-lg font-medium hover:text-primary transition-colors text-right">
+                      {t("shop")}
+                    </Link>
+                    <Link href="/categories" className="text-lg font-medium hover:text-primary transition-colors text-right">
+                      {t("categories")}
+                    </Link>
+                    <Link href="/track-order" className="text-lg font-medium hover:text-primary transition-colors text-right">
+                      {t("trackOrder")}
+                    </Link>
+                    <Link href="/about" className="text-lg font-medium hover:text-primary transition-colors text-right">
+                      {t("about")}
+                    </Link>
+                    <Link href="/contact" className="text-lg font-medium hover:text-primary transition-colors text-right">
+                      {t("contact")}
+                    </Link>
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            </div>
 
+            {/* Logo - Centered on Mobile, Left on Desktop */}
             <Link href="/" className="flex items-center gap-2 group flex-shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-auto lg:translate-x-0">
               <div className="relative w-24 h-10 md:w-32 md:h-12 transition-transform duration-300 group-hover:scale-105">
                 <Image src="/images/studo-logo.jpg" alt="Studo.ps Logo" fill className="object-contain" priority />

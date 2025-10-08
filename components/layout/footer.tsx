@@ -38,6 +38,19 @@ export function Footer() {
   return (
     <footer className="bg-gradient-to-br from-muted/50 via-background to-muted/30 border-t mt-20">
       <div className="container mx-auto px-4 py-12 md:py-16">
+        {/* Testimonials Section - FIRST */}
+        <div className="mb-12 pb-8 border-b">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h3 className="text-xl font-bold">{t("whatCustomersSay")}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{t("realExperiences")}</p>
+            </div>
+            <TestimonialForm onSuccess={fetchTestimonials} />
+          </div>
+          <TestimonialsDisplay testimonials={testimonials} />
+        </div>
+
+        {/* Footer Links Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {/* About */}
           <div className="space-y-4">
@@ -205,18 +218,6 @@ export function Footer() {
               </li>
             </ul>
           </div>
-        </div>
-
-        {/* Testimonials Section */}
-        <div className="mt-12 pt-8 border-t">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h3 className="text-xl font-bold">{t("whatCustomersSay")}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{t("realExperiences")}</p>
-            </div>
-            <TestimonialForm onSuccess={fetchTestimonials} />
-          </div>
-          <TestimonialsDisplay testimonials={testimonials} />
         </div>
 
         {/* Bottom bar */}
