@@ -3,10 +3,17 @@ import { getSupabaseServerClient } from "@/lib/supabase/server"
 
 // POST - Submit a new review
 export async function POST(request: NextRequest) {
+  console.log("========================================")
+  console.log("🔍 Review API - POST request received")
+  
   try {
-    const { productId, customerName, rating, comment } = await request.json()
+    const body = await request.json()
+    console.log("📦 Request body:", body)
+    
+    const { productId, customerName, rating, comment } = body
 
     if (!productId || !customerName || !rating || !comment) {
+      console.log("❌ Missing required fields:", { productId, customerName, rating, comment })
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -14,14 +21,19 @@ export async function POST(request: NextRequest) {
     }
 
     if (rating < 1 || rating > 5) {
+      console.log("❌ Invalid rating:", rating)
       return NextResponse.json(
         { error: "Rating must be between 1 and 5" },
         { status: 400 }
       )
     }
 
+    console.log("✅ Validation passed")
+    console.log("🔌 Creating Supabase client...")
+    
     const supabase = await getSupabaseServerClient()
 
+    console.log("💾 Inserting review into database...")
     const { data, error } = await supabase
       .from("product_reviews")
       .insert({
@@ -35,24 +47,27 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error("Review submission error:", error)
+      console.error("❌ Database error:", error)
       return NextResponse.json(
-        { error: "Failed to submit review" },
+        { error: `Failed to submit review: ${error.message}` },
         { status: 500 }
       )
     }
 
+    console.log("✅ Review inserted successfully:", data)
     return NextResponse.json({ 
       success: true, 
       review: data,
       message: "Review submitted and pending approval"
     })
   } catch (error) {
-    console.error("Review API error:", error)
+    console.error("❌ Review API error:", error)
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     )
+  } finally {
+    console.log("========================================")
   }
 }
 

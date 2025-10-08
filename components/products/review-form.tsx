@@ -28,7 +28,10 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    console.log("🔍 Review submission started", { productId, name, rating, comment })
+
     if (!name.trim() || !comment.trim()) {
+      console.log("❌ Validation failed - empty fields")
       showEnhancedToast({
         title: "Error",
         description: "Please fill all fields",
@@ -40,6 +43,7 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
     setIsSubmitting(true)
 
     try {
+      console.log("📤 Sending review to API...")
       const response = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,8 +55,16 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
         }),
       })
 
-      if (!response.ok) throw new Error("Failed to submit review")
+      console.log("📥 API Response:", response.status, response.statusText)
 
+      const data = await response.json()
+      console.log("📊 Response data:", data)
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to submit review")
+      }
+
+      console.log("✅ Review submitted successfully!")
       showEnhancedToast({
         title: t("reviewSubmitted"),
         description: t("reviewPending"),
@@ -65,14 +77,15 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
 
       onSuccess?.()
     } catch (error) {
-      console.error("Review submission error:", error)
+      console.error("❌ Review submission error:", error)
       showEnhancedToast({
         title: "Error",
-        description: "Failed to submit review. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to submit review. Please try again.",
         variant: "destructive"
       })
     } finally {
       setIsSubmitting(false)
+      console.log("🏁 Review submission process completed")
     }
   }
 
