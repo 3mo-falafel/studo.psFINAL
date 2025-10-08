@@ -22,8 +22,8 @@ else
 fi
 
 # Step 3: Install dependencies
-echo "Step 3: Installing dependencies..."
-npm install --production
+echo "📦 Installing dependencies..."
+npm install --production --legacy-peer-deps
 
 # Step 4: Create .env.local file
 echo "Step 4: Creating environment file..."

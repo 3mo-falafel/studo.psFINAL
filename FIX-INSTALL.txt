@@ -1,0 +1,27 @@
+╔════════════════════════════════════════════════════════════════╗
+║              🔧 QUICK FIX FOR NPM ERROR 🔧                     ║
+╚════════════════════════════════════════════════════════════════╝
+
+The error is a React version conflict. Here's the fix:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RUN THIS ON YOUR VPS (you're already in /var/www/studo-ecommerce):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+npm install --legacy-peer-deps && \
+bash deploy-vps.sh && \
+pm2 start npm --name "studo-ecommerce" -- start -- -p 3002 && \
+pm2 save && \
+echo "✅ DONE! Visit http://31.97.72.28:3002"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+That's it! This will:
+1. Install dependencies (ignoring peer dependency warnings)
+2. Build the app
+3. Start it on port 3002
+
+Then continue with Step 3 (Nginx setup) from QUICK-DEPLOY.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
