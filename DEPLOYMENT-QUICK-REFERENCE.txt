@@ -1,0 +1,145 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║           STUDO.PS VPS DEPLOYMENT - COPY & PASTE COMMANDS            ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+📦 CODE PUSHED TO: https://github.com/3mo-falafel/studo.psFINAL.git
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 1: SSH INTO YOUR VPS
+═══════════════════════════════════════════════════════════════════════
+
+ssh root@31.97.72.28
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 2: RUN THESE COMMANDS (One by one)
+═══════════════════════════════════════════════════════════════════════
+
+cd /var/www
+
+git clone https://github.com/3mo-falafel/studo.psFINAL.git studo-ecommerce
+
+cd studo-ecommerce
+
+npm install --production
+
+nano .env.local
+
+# ⚠️ PASTE YOUR SUPABASE CREDENTIALS IN THE FILE:
+# NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key  
+# SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+# Press Ctrl+X, then Y, then Enter to save
+
+npm run build
+
+pm2 start npm --name "studo-ecommerce" -- start -- -p 3002
+
+pm2 save
+
+pm2 list
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 3: CONFIGURE NGINX
+═══════════════════════════════════════════════════════════════════════
+
+sudo nano /etc/nginx/sites-available/studo-ecommerce
+
+# ⚠️ PASTE THIS NGINX CONFIGURATION:
+
+server {
+    listen 80;
+    server_name studo.ps www.studo.ps;
+
+    location / {
+        proxy_pass http://localhost:3002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Press Ctrl+X, then Y, then Enter to save
+
+sudo ln -s /etc/nginx/sites-available/studo-ecommerce /etc/nginx/sites-enabled/
+
+sudo nginx -t
+
+sudo systemctl reload nginx
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 4: VERIFY DEPLOYMENT
+═══════════════════════════════════════════════════════════════════════
+
+pm2 logs studo-ecommerce --lines 20
+
+curl http://localhost:3002
+
+# ✅ YOUR SITE SHOULD BE LIVE AT:
+#    http://31.97.72.28:3002
+#    http://studo.ps (if domain configured)
+
+═══════════════════════════════════════════════════════════════════════
+  OPTIONAL: ADD SSL CERTIFICATE
+═══════════════════════════════════════════════════════════════════════
+
+sudo apt update
+
+sudo apt install certbot python3-certbot-nginx -y
+
+sudo certbot --nginx -d studo.ps -d www.studo.ps
+
+# Follow the prompts, then your site will be available at:
+# https://studo.ps
+
+═══════════════════════════════════════════════════════════════════════
+  USEFUL COMMANDS
+═══════════════════════════════════════════════════════════════════════
+
+pm2 list                          # Show all running apps
+pm2 logs studo-ecommerce          # View real-time logs  
+pm2 restart studo-ecommerce       # Restart the app
+pm2 stop studo-ecommerce          # Stop the app
+pm2 monit                         # Monitor CPU/RAM usage
+
+# Update code from GitHub:
+cd /var/www/studo-ecommerce
+git pull
+npm install --production
+npm run build
+pm2 restart studo-ecommerce
+
+═══════════════════════════════════════════════════════════════════════
+  TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════
+
+# If port 3002 is already in use:
+sudo lsof -i :3002
+sudo kill -9 <PID>
+pm2 restart studo-ecommerce
+
+# If Nginx shows 502 error:
+pm2 logs studo-ecommerce
+pm2 restart studo-ecommerce
+sudo systemctl status nginx
+
+# If build fails:
+node -v  # Should be 18 or higher
+npm run build  # Check error message
+
+═══════════════════════════════════════════════════════════════════════
+
+✅ DEPLOYMENT COMPLETE!
+
+Your Studo.ps e-commerce site is now live with:
+  ✅ Product reviews & testimonials
+  ✅ Infinite scrolling ticker
+  ✅ Admin dashboard with delete functionality  
+  ✅ Bilingual support (Arabic/English)
+  ✅ Mobile responsive design
+
+═══════════════════════════════════════════════════════════════════════
