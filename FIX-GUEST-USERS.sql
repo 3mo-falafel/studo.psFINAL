@@ -50,17 +50,17 @@ CREATE POLICY "Anyone can read approved reviews"
   USING (is_approved = true);
 
 -- 7. Allow anyone to submit testimonials (pending approval)
-DROP POLICY IF EXISTS "Anyone can submit testimonials" ON testimonials;
+DROP POLICY IF EXISTS "Anyone can submit testimonials" ON site_testimonials;
 CREATE POLICY "Anyone can submit testimonials"
-  ON testimonials
+  ON site_testimonials
   FOR INSERT
   TO authenticated, anon
   WITH CHECK (is_approved = false);
 
 -- 8. Allow anyone to read approved testimonials
-DROP POLICY IF EXISTS "Anyone can read approved testimonials" ON testimonials;
+DROP POLICY IF EXISTS "Anyone can read approved testimonials" ON site_testimonials;
 CREATE POLICY "Anyone can read approved testimonials"
-  ON testimonials
+  ON site_testimonials
   FOR SELECT
   TO authenticated, anon
   USING (is_approved = true);
@@ -109,4 +109,4 @@ CREATE POLICY "Anyone can update discount codes"
 
 COMMENT ON TABLE orders IS 'Guest users can place orders without authentication';
 COMMENT ON TABLE product_reviews IS 'Guest users can submit reviews pending admin approval';
-COMMENT ON TABLE testimonials IS 'Guest users can submit testimonials pending admin approval';
+COMMENT ON TABLE site_testimonials IS 'Guest users can submit testimonials pending admin approval';
