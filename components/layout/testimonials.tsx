@@ -47,6 +47,9 @@ export function TestimonialForm({ onSuccess }: TestimonialFormProps) {
     setIsSubmitting(true)
 
     try {
+      console.log("🔍 Testimonial submission started", { name, rating, comment })
+      console.log("📤 Sending testimonial to API...")
+      
       const response = await fetch("/api/testimonials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -57,8 +60,16 @@ export function TestimonialForm({ onSuccess }: TestimonialFormProps) {
         }),
       })
 
-      if (!response.ok) throw new Error("Failed to submit testimonial")
+      console.log("📥 API Response:", response.status, response.statusText)
 
+      const data = await response.json()
+      console.log("📊 Response data:", data)
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to submit testimonial")
+      }
+
+      console.log("✅ Testimonial submitted successfully!")
       showEnhancedToast({
         title: t("reviewSubmitted"),
         description: t("reviewPending"),
@@ -72,14 +83,15 @@ export function TestimonialForm({ onSuccess }: TestimonialFormProps) {
 
       onSuccess?.()
     } catch (error) {
-      console.error("Testimonial submission error:", error)
+      console.error("❌ Testimonial submission error:", error)
       showEnhancedToast({
         title: t("error"),
-        description: t("tryAgain"),
+        description: error instanceof Error ? error.message : t("tryAgain"),
         variant: "destructive"
       })
     } finally {
       setIsSubmitting(false)
+      console.log("🏁 Testimonial submission process completed")
     }
   }
 
