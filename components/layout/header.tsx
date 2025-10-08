@@ -33,30 +33,30 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px]">
-                <nav className="flex flex-col gap-4 mt-8">
-                  <Link href="/" className="text-lg font-medium hover:text-primary transition-colors">
+                <nav className="flex flex-col gap-4 mt-8 px-4">
+                  <Link href="/" className="text-lg font-medium hover:text-primary transition-colors text-right">
                     {t("home")}
                   </Link>
-                  <Link href="/shop" className="text-lg font-medium hover:text-primary transition-colors">
+                  <Link href="/shop" className="text-lg font-medium hover:text-primary transition-colors text-right">
                     {t("shop")}
                   </Link>
-                  <Link href="/categories" className="text-lg font-medium hover:text-primary transition-colors">
+                  <Link href="/categories" className="text-lg font-medium hover:text-primary transition-colors text-right">
                     {t("categories")}
                   </Link>
-                  <Link href="/track-order" className="text-lg font-medium hover:text-primary transition-colors">
+                  <Link href="/track-order" className="text-lg font-medium hover:text-primary transition-colors text-right">
                     {t("trackOrder")}
                   </Link>
-                  <Link href="/about" className="text-lg font-medium hover:text-primary transition-colors">
+                  <Link href="/about" className="text-lg font-medium hover:text-primary transition-colors text-right">
                     {t("about")}
                   </Link>
-                  <Link href="/contact" className="text-lg font-medium hover:text-primary transition-colors">
+                  <Link href="/contact" className="text-lg font-medium hover:text-primary transition-colors text-right">
                     {t("contact")}
                   </Link>
                 </nav>
               </SheetContent>
             </Sheet>
 
-            <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2 group flex-shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-auto lg:translate-x-0">
               <div className="relative w-24 h-10 md:w-32 md:h-12 transition-transform duration-300 group-hover:scale-105">
                 <Image src="/images/studo-logo.jpg" alt="Studo.ps Logo" fill className="object-contain" priority />
               </div>

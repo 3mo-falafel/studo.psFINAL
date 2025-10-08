@@ -10,7 +10,7 @@ import { formatPrice } from "@/lib/utils/currency"
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks"
 import { addToCart } from "@/lib/redux/slices/cart-slice"
 import { addToWishlist, removeFromWishlist } from "@/lib/redux/slices/wishlist-slice"
-import { useToast } from "@/hooks/use-toast"
+import { useEnhancedToast } from "@/hooks/use-enhanced-toast"
 import { useLanguage } from "@/lib/contexts/language-context"
 import type { Product } from "@/lib/types/database"
 
@@ -21,7 +21,7 @@ interface ProductInfoProps {
 export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1)
   const dispatch = useAppDispatch()
-  const { toast } = useToast()
+  const { showEnhancedToast } = useEnhancedToast()
   const { t } = useLanguage()
   const wishlistItems = useAppSelector((state) => state.wishlist.items)
 
@@ -37,7 +37,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
     
     // Check if stock is available
     if (stock <= 0) {
-      toast({
+      showEnhancedToast({
         title: t("outOfStockLabel"),
         description: t("backInSoon"),
         variant: "destructive",
@@ -47,7 +47,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
     // Check if quantity exceeds stock
     if (quantity > stock) {
-      toast({
+      showEnhancedToast({
         title: t("insufficientStock"),
         description: t("cannotExceedStock").replace("{max}", stock.toString()),
         variant: "destructive",
@@ -67,16 +67,19 @@ export function ProductInfo({ product }: ProductInfoProps) {
       )
     }
 
-    toast({
+    showEnhancedToast({
       title: t("addedToCart"),
       description: t("itemAddedToCart").replace("{name}", product.name).replace("{quantity}", quantity.toString()),
+      productName: product.name,
+      productImage: product.images[0] || "/placeholder.svg?height=400&width=400",
+      action: "viewCart",
     })
   }
 
   const handleToggleWishlist = () => {
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id))
-      toast({
+      showEnhancedToast({
         title: t("removedFromWishlist"),
         description: t("itemRemovedFromWishlist").replace("{name}", product.name),
       })
@@ -90,9 +93,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
           slug: product.slug,
         }),
       )
-      toast({
+      showEnhancedToast({
         title: t("addedToWishlist"),
         description: t("itemAddedToWishlist").replace("{name}", product.name),
+        productName: product.name,
+        productImage: product.images[0] || "/placeholder.svg?height=400&width=400",
+        action: "viewWishlist",
       })
     }
   }
@@ -102,7 +108,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
     if (quantity < stock) {
       setQuantity(quantity + 1)
     } else {
-      toast({
+      showEnhancedToast({
         title: t("stockLimitReached").replace("{max}", stock.toString()),
         description: t("cannotExceedStock").replace("{max}", stock.toString()),
         variant: "destructive",

@@ -151,83 +151,83 @@ export function ModernHero({ categoryImages }: ModernHeroProps) {
                     {t("learnMoreDiscount")}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                      <Gift className="w-6 h-6 text-[#4A9B8E]" />
-                      {t("discountDialogTitle")}
+                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-4 md:p-6">
+                  <DialogHeader className="space-y-2">
+                    <DialogTitle className="text-xl md:text-2xl font-bold flex items-center gap-2">
+                      <Gift className="w-5 h-5 md:w-6 md:h-6 text-[#4A9B8E] flex-shrink-0" />
+                      <span className="truncate">{t("discountDialogTitle")}</span>
                     </DialogTitle>
-                    <DialogDescription className="text-base">
+                    <DialogDescription className="text-sm md:text-base">
                       {t("discountDialogDescription")}
                     </DialogDescription>
                   </DialogHeader>
                   
-                  <div className="space-y-6 py-4">
+                  <div className="space-y-4 md:space-y-6 py-2 md:py-4">
                     {/* How It Works */}
-                    <div>
-                      <h3 className="text-xl font-bold mb-3 text-[#4A9B8E]">🎯 كيف يعمل؟</h3>
-                      <ol className="space-y-2 text-muted-foreground">
+                    <div className="overflow-hidden">
+                      <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-[#4A9B8E]">🎯 كيف يعمل؟</h3>
+                      <ol className="space-y-2 text-sm md:text-base text-muted-foreground">
                         <li className="flex items-start gap-2">
-                          <span className="font-bold text-[#4A9B8E] min-w-[24px]">1.</span>
-                          <span>أكمل عملية الشراء على Studo.ps</span>
+                          <span className="font-bold text-[#4A9B8E] min-w-[20px] md:min-w-[24px] flex-shrink-0">1.</span>
+                          <span className="break-words">أكمل عملية الشراء على Studo.ps</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="font-bold text-[#4A9B8E] min-w-[24px]">2.</span>
-                          <span>احصل على كود الخصم فوراً على صفحة النجاح</span>
+                          <span className="font-bold text-[#4A9B8E] min-w-[20px] md:min-w-[24px] flex-shrink-0">2.</span>
+                          <span className="break-words">احصل على كود الخصم فوراً على صفحة النجاح</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="font-bold text-[#4A9B8E] min-w-[24px]">3.</span>
-                          <span>احفظ الكود (صالح لمدة 90 يوماً)</span>
+                          <span className="font-bold text-[#4A9B8E] min-w-[20px] md:min-w-[24px] flex-shrink-0">3.</span>
+                          <span className="break-words">احفظ الكود (صالح لمدة 90 يوماً)</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="font-bold text-[#4A9B8E] min-w-[24px]">4.</span>
-                          <span>استخدمه في طلبك القادم لتوفير المال!</span>
+                          <span className="font-bold text-[#4A9B8E] min-w-[20px] md:min-w-[24px] flex-shrink-0">4.</span>
+                          <span className="break-words">استخدمه في طلبك القادم لتوفير المال!</span>
                         </li>
                       </ol>
                     </div>
 
                     {/* Discount Tiers */}
-                    <div>
-                      <h3 className="text-xl font-bold mb-3 text-[#4A9B8E]">💰 مستويات الخصم</h3>
+                    <div className="overflow-hidden">
+                      <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-[#4A9B8E]">💰 مستويات الخصم</h3>
                       <div className="space-y-3">
                         {/* Tier 1 */}
-                        <div className="border-2 border-green-500 rounded-lg p-4 bg-green-50 dark:bg-green-950/20">
-                          <div className="flex items-center justify-between mb-2">
-                            <Badge className="bg-green-600 text-white text-sm px-3 py-1">خصم 5%</Badge>
-                            <span className="text-2xl font-bold text-green-700 dark:text-green-400">₪250+</span>
+                        <div className="border-2 border-green-500 rounded-lg p-3 md:p-4 bg-green-50 dark:bg-green-950/20 overflow-hidden">
+                          <div className="flex items-center justify-between mb-2 gap-2">
+                            <Badge className="bg-green-600 text-white text-xs md:text-sm px-2 md:px-3 py-1 flex-shrink-0">خصم 5%</Badge>
+                            <span className="text-xl md:text-2xl font-bold text-green-700 dark:text-green-400 flex-shrink-0">₪250+</span>
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs md:text-sm text-muted-foreground break-words">
                             اشترِ بـ <strong>₪250 أو أكثر</strong> واحصل على <strong>كود خصم 5%</strong> لعملية الشراء القادمة.
                           </p>
-                          <p className="text-xs text-green-700 dark:text-green-400 mt-2 font-medium">
+                          <p className="text-[10px] md:text-xs text-green-700 dark:text-green-400 mt-2 font-medium truncate">
                             صيغة الكود: STUDO5-XXXXXX
                           </p>
                         </div>
 
                         {/* Tier 2 */}
-                        <div className="border-2 border-blue-500 rounded-lg p-4 bg-blue-50 dark:bg-blue-950/20">
-                          <div className="flex items-center justify-between mb-2">
-                            <Badge className="bg-blue-600 text-white text-sm px-3 py-1">خصم 10%</Badge>
-                            <span className="text-2xl font-bold text-blue-700 dark:text-blue-400">₪500+</span>
+                        <div className="border-2 border-blue-500 rounded-lg p-3 md:p-4 bg-blue-50 dark:bg-blue-950/20 overflow-hidden">
+                          <div className="flex items-center justify-between mb-2 gap-2">
+                            <Badge className="bg-blue-600 text-white text-xs md:text-sm px-2 md:px-3 py-1 flex-shrink-0">خصم 10%</Badge>
+                            <span className="text-xl md:text-2xl font-bold text-blue-700 dark:text-blue-400 flex-shrink-0">₪500+</span>
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs md:text-sm text-muted-foreground break-words">
                             اشترِ بـ <strong>₪500 أو أكثر</strong> واحصل على <strong>كود خصم 10%</strong> لعملية الشراء القادمة.
                           </p>
-                          <p className="text-xs text-blue-700 dark:text-blue-400 mt-2 font-medium">
+                          <p className="text-[10px] md:text-xs text-blue-700 dark:text-blue-400 mt-2 font-medium truncate">
                             صيغة الكود: STUDO10-XXXXXX
                           </p>
                         </div>
 
                         {/* Tier 3 */}
-                        <div className="border-2 border-purple-500 rounded-lg p-4 bg-purple-50 dark:bg-purple-950/20">
-                          <div className="flex items-center justify-between mb-2">
-                            <Badge className="bg-purple-600 text-white text-sm px-3 py-1">خصم 15%</Badge>
-                            <span className="text-2xl font-bold text-purple-700 dark:text-purple-400">₪1000+</span>
+                        <div className="border-2 border-purple-500 rounded-lg p-3 md:p-4 bg-purple-50 dark:bg-purple-950/20 overflow-hidden">
+                          <div className="flex items-center justify-between mb-2 gap-2">
+                            <Badge className="bg-purple-600 text-white text-xs md:text-sm px-2 md:px-3 py-1 flex-shrink-0">خصم 15%</Badge>
+                            <span className="text-xl md:text-2xl font-bold text-purple-700 dark:text-purple-400 flex-shrink-0">₪1000+</span>
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs md:text-sm text-muted-foreground break-words">
                             اشترِ بـ <strong>₪1000 أو أكثر</strong> واحصل على <strong>كود خصم 15%</strong> لعملية الشراء القادمة!
                           </p>
-                          <p className="text-xs text-purple-700 dark:text-purple-400 mt-2 font-medium">
+                          <p className="text-[10px] md:text-xs text-purple-700 dark:text-purple-400 mt-2 font-medium truncate">
                             صيغة الكود: STUDO15-XXXXXX
                           </p>
                         </div>
@@ -275,20 +275,20 @@ export function ModernHero({ categoryImages }: ModernHeroProps) {
 
             {/* Features Grid */}
             <div
-              className={`grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8 transition-all duration-700 delay-400 ${
+              className={`grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 pt-8 transition-all duration-700 delay-400 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
               {/* Free Shipping */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#4A9B8E]/20 to-[#3D8B7E]/20 rounded-xl blur-lg group-hover:blur-xl transition-all" />
-                <div className="relative flex items-start gap-3 p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#4A9B8E]/30 hover:border-[#4A9B8E] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                  <div className="p-2 bg-[#4A9B8E]/10 rounded-lg">
-                    <Truck className="w-6 h-6 text-[#4A9B8E]" />
+                <div className="relative flex flex-col items-center gap-2 md:flex-row md:items-start md:gap-3 p-3 md:p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#4A9B8E]/30 hover:border-[#4A9B8E] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                  <div className="p-1.5 md:p-2 bg-[#4A9B8E]/10 rounded-lg flex-shrink-0">
+                    <Truck className="w-5 h-5 md:w-6 md:h-6 text-[#4A9B8E]" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-sm mb-1">{t("freeShippingTitle")}</h3>
-                    <p className="text-xs text-muted-foreground">{t("freeShippingDesc")}</p>
+                  <div className="text-center md:text-right min-w-0">
+                    <h3 className="font-bold text-xs md:text-sm mb-0.5 md:mb-1">{t("freeShippingTitle")}</h3>
+                    <p className="text-[10px] md:text-xs text-muted-foreground">{t("freeShippingDesc")}</p>
                   </div>
                 </div>
               </div>
@@ -296,13 +296,13 @@ export function ModernHero({ categoryImages }: ModernHeroProps) {
               {/* Free Pickup */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#6B7280]/20 to-[#4B5563]/20 rounded-xl blur-lg group-hover:blur-xl transition-all" />
-                <div className="relative flex items-start gap-3 p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#6B7280]/30 hover:border-[#6B7280] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                  <div className="p-2 bg-[#6B7280]/10 rounded-lg">
-                    <MapPin className="w-6 h-6 text-[#6B7280]" />
+                <div className="relative flex flex-col items-center gap-2 md:flex-row md:items-start md:gap-3 p-3 md:p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#6B7280]/30 hover:border-[#6B7280] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                  <div className="p-1.5 md:p-2 bg-[#6B7280]/10 rounded-lg flex-shrink-0">
+                    <MapPin className="w-5 h-5 md:w-6 md:h-6 text-[#6B7280]" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-sm mb-1">{t("freePickupTitle")}</h3>
-                    <p className="text-xs text-muted-foreground">{t("freePickupDesc")}</p>
+                  <div className="text-center md:text-right min-w-0">
+                    <h3 className="font-bold text-xs md:text-sm mb-0.5 md:mb-1">{t("freePickupTitle")}</h3>
+                    <p className="text-[10px] md:text-xs text-muted-foreground">{t("freePickupDesc")}</p>
                   </div>
                 </div>
               </div>
@@ -310,13 +310,13 @@ export function ModernHero({ categoryImages }: ModernHeroProps) {
               {/* 1 Year Warranty */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#3D8B7E]/20 to-[#2D7A6E]/20 rounded-xl blur-lg group-hover:blur-xl transition-all" />
-                <div className="relative flex items-start gap-3 p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#3D8B7E]/30 hover:border-[#3D8B7E] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                  <div className="p-2 bg-[#3D8B7E]/10 rounded-lg">
-                    <Shield className="w-6 h-6 text-[#3D8B7E]" />
+                <div className="relative flex flex-col items-center gap-2 md:flex-row md:items-start md:gap-3 p-3 md:p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#3D8B7E]/30 hover:border-[#3D8B7E] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                  <div className="p-1.5 md:p-2 bg-[#3D8B7E]/10 rounded-lg flex-shrink-0">
+                    <Shield className="w-5 h-5 md:w-6 md:h-6 text-[#3D8B7E]" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-sm mb-1">{t("oneYearWarrantyTitle")}</h3>
-                    <p className="text-xs text-muted-foreground">{t("oneYearWarrantyDesc")}</p>
+                  <div className="text-center md:text-right min-w-0">
+                    <h3 className="font-bold text-xs md:text-sm mb-0.5 md:mb-1">{t("oneYearWarrantyTitle")}</h3>
+                    <p className="text-[10px] md:text-xs text-muted-foreground">{t("oneYearWarrantyDesc")}</p>
                   </div>
                 </div>
               </div>
@@ -324,13 +324,13 @@ export function ModernHero({ categoryImages }: ModernHeroProps) {
               {/* Loyalty Rewards */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#4A9B8E]/20 to-[#6B7280]/20 rounded-xl blur-lg group-hover:blur-xl transition-all" />
-                <div className="relative flex items-start gap-3 p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#4A9B8E]/30 hover:border-[#4A9B8E] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                  <div className="p-2 bg-[#4A9B8E]/10 rounded-lg">
-                    <Gift className="w-6 h-6 text-[#4A9B8E]" />
+                <div className="relative flex flex-col items-center gap-2 md:flex-row md:items-start md:gap-3 p-3 md:p-5 bg-card/80 backdrop-blur-sm rounded-xl border-2 border-[#4A9B8E]/30 hover:border-[#4A9B8E] transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                  <div className="p-1.5 md:p-2 bg-[#4A9B8E]/10 rounded-lg flex-shrink-0">
+                    <Gift className="w-5 h-5 md:w-6 md:h-6 text-[#4A9B8E]" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-sm mb-1">{t("loyaltyRewardsTitle")}</h3>
-                    <p className="text-xs text-muted-foreground">{t("loyaltyRewardsDesc")}</p>
+                  <div className="text-center md:text-right min-w-0">
+                    <h3 className="font-bold text-xs md:text-sm mb-0.5 md:mb-1">{t("loyaltyRewardsTitle")}</h3>
+                    <p className="text-[10px] md:text-xs text-muted-foreground">{t("loyaltyRewardsDesc")}</p>
                   </div>
                 </div>
               </div>

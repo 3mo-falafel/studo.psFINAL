@@ -204,21 +204,6 @@ export function Footer() {
                 </a>
               </li>
             </ul>
-
-            {/* Newsletter */}
-            <div className="mt-6 space-y-3">
-              <h4 className="text-sm font-semibold">{t("newsletter")}</h4>
-              <div className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder={t("yourEmail")}
-                  className="h-9 transition-all focus:ring-2 focus:ring-primary/20"
-                />
-                <Button size="sm" className="transition-all hover:scale-105 shadow-sm hover:shadow-md">
-                  {t("subscribe")}
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
 
