@@ -25,25 +25,16 @@ fi
 echo "Step 3: Installing dependencies..."
 npm install --production
 
-# Step 4: Check for .env.local
-if [ ! -f ".env.local" ]; then
-    echo ""
-    echo "⚠️  WARNING: .env.local file not found!"
-    echo "Please create .env.local with your Supabase credentials:"
-    echo ""
-    echo "NEXT_PUBLIC_SUPABASE_URL=your_supabase_url"
-    echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key"
-    echo "SUPABASE_SERVICE_ROLE_KEY=your_service_role_key"
-    echo ""
-    echo "Create it now? (y/n)"
-    read -r CREATE_ENV
-    if [ "$CREATE_ENV" = "y" ]; then
-        nano .env.local
-    else
-        echo "Please create .env.local before continuing"
-        exit 1
-    fi
-fi
+# Step 4: Create .env.local file
+echo "Step 4: Creating environment file..."
+cat > .env.local << 'EOF'
+NEXT_PUBLIC_SUPABASE_URL=https://kkulikrjfnvrttamgdxh.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtrdWxpa3JqZm52cnR0YW1nZHhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk2OTI1MTMsImV4cCI6MjA3NTI2ODUxM30.THGTDZE7K_zXQU-p1oO7OhaLNn4uvzZ8eakcKiYShC4
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+EOF
+
+echo "✅ Environment file created"
+echo ""
 
 # Step 5: Build application
 echo "Step 5: Building Next.js application..."

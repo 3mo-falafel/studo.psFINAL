@@ -1,0 +1,82 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                    STUDO.PS - DEPLOY NOW!                            ║
+║                  Copy & Paste These Commands                         ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+⚠️  IMPORTANT: Your Supabase credentials are already configured!
+    Just run these commands on your VPS.
+
+═══════════════════════════════════════════════════════════════════════
+
+STEP 1: SSH into your VPS
+───────────────────────────────────────────────────────────────────────
+ssh root@31.97.72.28
+
+
+STEP 2: Run this ONE command (copies and runs everything)
+───────────────────────────────────────────────────────────────────────
+cd /var/www && git clone https://github.com/3mo-falafel/studo.psFINAL.git studo-ecommerce && cd studo-ecommerce && npm install --production && cat > .env.local << 'EOF'
+NEXT_PUBLIC_SUPABASE_URL=https://kkulikrjfnvrttamgdxh.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtrdWxpa3JqZm52cnR0YW1nZHhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk2OTI1MTMsImV4cCI6MjA3NTI2ODUxM30.THGTDZE7K_zXQU-p1oO7OhaLNn4uvzZ8eakcKiYShC4
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+EOF
+npm run build && pm2 start npm --name "studo-ecommerce" -- start -- -p 3002 && pm2 save
+
+
+STEP 3: Setup Nginx (Run these commands)
+───────────────────────────────────────────────────────────────────────
+cat > /etc/nginx/sites-available/studo-ecommerce << 'EOF'
+server {
+    listen 80;
+    server_name studo.ps www.studo.ps;
+    
+    location / {
+        proxy_pass http://localhost:3002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+EOF
+
+ln -sf /etc/nginx/sites-available/studo-ecommerce /etc/nginx/sites-enabled/
+nginx -t && systemctl reload nginx
+
+
+STEP 4: Verify it's running
+───────────────────────────────────────────────────────────────────────
+pm2 list
+curl http://localhost:3002
+
+
+═══════════════════════════════════════════════════════════════════════
+
+✅ DONE! Your site is now live at:
+
+   🌐 http://31.97.72.28:3002
+   🌐 http://studo.ps (if domain is pointed to your VPS)
+
+═══════════════════════════════════════════════════════════════════════
+
+OPTIONAL: Add SSL Certificate (Run on VPS)
+───────────────────────────────────────────────────────────────────────
+apt install certbot python3-certbot-nginx -y
+certbot --nginx -d studo.ps -d www.studo.ps
+
+After SSL: https://studo.ps will work! 🔒
+
+═══════════════════════════════════════════════════════════════════════
+
+USEFUL COMMANDS:
+───────────────────────────────────────────────────────────────────────
+pm2 logs studo-ecommerce          # View logs
+pm2 restart studo-ecommerce       # Restart app
+pm2 stop studo-ecommerce          # Stop app
+pm2 monit                         # Monitor resources
+
+═══════════════════════════════════════════════════════════════════════
