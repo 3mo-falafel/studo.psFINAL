@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     for (const item of items) {
       const { data: product, error } = await supabase
         .from("products")
-        .select("id, name, quantity")
+        .select("id, name, stock_quantity")
         .eq("id", item.id)
         .single()
 
@@ -34,13 +34,13 @@ export async function POST(request: NextRequest) {
         continue
       }
 
-      const isAvailable = product.quantity >= item.quantity
+      const isAvailable = (product.stock_quantity || 0) >= item.quantity
       
       validationResults.push({
         id: product.id,
         name: product.name,
         available: isAvailable,
-        stock: product.quantity,
+        stock: product.stock_quantity || 0,
         requested: item.quantity,
       })
 

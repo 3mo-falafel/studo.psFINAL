@@ -7,6 +7,10 @@ import { ProductCount, LoadingFilters, NoProducts } from "@/components/shop/shop
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { Suspense } from "react"
 
+// Force dynamic to get fresh stock data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 interface ShopPageProps {
   searchParams: Promise<{
     category?: string
@@ -24,10 +28,10 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const params = await searchParams
   const supabase = await getSupabaseServerClient()
 
-  // Build query - explicitly select fields and map quantity to stock_quantity
+  // Build query - select stock_quantity and stock_status for real inventory
   let query = supabase
     .from("products")
-    .select("id, name, slug, price, compare_at_price, images, quantity, category_id, is_featured, best_seller, trending, category:categories(*)")
+    .select("id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, is_featured, best_seller, trending, category:categories(*)")
     .eq("is_active", true)
 
   // Apply special filters
@@ -81,13 +85,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       query = query.order("created_at", { ascending: false })
   }
 
-  const { data: rawProducts } = await query
-
-  // Map quantity to stock_quantity for code consistency
-  const products = (rawProducts || []).map((p: any) => ({
-    ...p,
-    stock_quantity: p.quantity ?? 0,
-  }))
+  const { data: products } = await query
 
   // Fetch categories for filter
   const { data: categories } = await supabase

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/lib/contexts/language-context"
 import Image from "next/image"
-import { ShoppingCart, Heart } from "lucide-react"
+import { ShoppingCart, Heart, CheckCircle } from "lucide-react"
 
 interface EnhancedToastOptions {
   title: string
@@ -16,6 +16,7 @@ interface EnhancedToastOptions {
   actionLabel?: string
   onActionClick?: () => void
   variant?: "default" | "destructive"
+  showSuccessIcon?: boolean // Add green checkmark for success
 }
 
 export function useEnhancedToast() {
@@ -31,12 +32,21 @@ export function useEnhancedToast() {
     action,
     actionLabel,
     onActionClick,
-    variant = "default"
+    variant = "default",
+    showSuccessIcon = false
   }: EnhancedToastOptions) => {
     // Vibrate on mobile
     if (typeof navigator !== "undefined" && navigator.vibrate) {
       navigator.vibrate(50)
     }
+
+    // Add green checkmark to title for success messages
+    const enhancedTitle = showSuccessIcon ? (
+      <div className="flex items-center gap-2">
+        <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+        <span>{title}</span>
+      </div>
+    ) as any : title
 
     // Prepare description with product info
     let enhancedDescription = description
@@ -96,7 +106,7 @@ export function useEnhancedToast() {
     }
 
     toast({
-      title,
+      title: enhancedTitle,
       description: enhancedDescription,
       action: actionButton,
       variant,

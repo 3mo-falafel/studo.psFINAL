@@ -24,6 +24,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const { showEnhancedToast } = useEnhancedToast()
   const { t } = useLanguage()
   const wishlistItems = useAppSelector((state) => state.wishlist.items)
+  const cartItems = useAppSelector((state) => state.cart.items) // Get cart items for stock validation
 
   const isInWishlist = wishlistItems.some((item) => item.id === product.id)
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price
@@ -45,11 +46,15 @@ export function ProductInfo({ product }: ProductInfoProps) {
       return
     }
 
-    // Check if quantity exceeds stock
-    if (quantity > stock) {
+    // Get current quantity in cart for this product
+    const existingItem = cartItems.find(item => item.id === product.id)
+    const currentQuantityInCart = existingItem ? existingItem.quantity : 0
+    
+    // Check if adding this quantity would exceed stock
+    if (currentQuantityInCart + quantity > stock) {
       showEnhancedToast({
         title: t("insufficientStock"),
-        description: t("cannotExceedStock").replace("{max}", stock.toString()),
+        description: `You already have ${currentQuantityInCart} in cart. ${t("cannotExceedStock").replace("{max}", stock.toString())}`,
         variant: "destructive",
       })
       return
@@ -63,6 +68,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           price: product.price,
           image: product.images[0] || "/placeholder.svg?height=400&width=400",
           slug: product.slug,
+          stock: stock, // Pass stock for validation
         }),
       )
     }
@@ -73,6 +79,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       productName: product.name,
       productImage: product.images[0] || "/placeholder.svg?height=400&width=400",
       action: "viewCart",
+      showSuccessIcon: true
     })
   }
 
@@ -99,6 +106,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         productName: product.name,
         productImage: product.images[0] || "/placeholder.svg?height=400&width=400",
         action: "viewWishlist",
+        showSuccessIcon: true
       })
     }
   }

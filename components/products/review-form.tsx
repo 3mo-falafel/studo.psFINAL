@@ -68,6 +68,7 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
       showEnhancedToast({
         title: t("reviewSubmitted"),
         description: t("reviewPending"),
+        showSuccessIcon: true
       })
 
       // Reset form

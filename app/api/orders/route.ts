@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await getSupabaseServerClient()
 
-    // Get user
+    // Get user (may be null for guest checkout)
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -29,31 +29,37 @@ export async function POST(request: NextRequest) {
     const randomDigits = Math.floor(100000 + Math.random() * 900000) // Generates 6-digit number
     const orderNumber = `STUDO-${randomDigits}`
 
+    // Prepare order data - EXACTLY like reviews: no user creation needed
+    // Just store guest info directly in the order (like reviews store customer_name)
+    const orderData: any = {
+      order_number: orderNumber,
+      user_id: user?.id || null, // NULL for guest orders (like reviews don't need user_id)
+      guest_name: user?.id ? null : shippingAddress.full_name, // Store guest name if not logged in
+      guest_phone: user?.id ? null : shippingAddress.whatsapp, // Store guest phone if not logged in
+      status: "pending",
+      subtotal,
+      discount_code: discountCode || null,
+      discount_amount: discountAmount || 0,
+      shipping_cost: shipping,
+      tax,
+      total,
+      payment_method: paymentMethod,
+      payment_status: "pending",
+      shipping_address: shippingAddress,
+      delivery_method: deliveryMethod,
+      notes,
+    }
+
     // Create order
     const { data: order, error: orderError} = await supabase
       .from("orders")
-      .insert({
-        order_number: orderNumber,
-        user_id: user?.id || null,
-        status: "pending",
-        subtotal,
-        discount_code: discountCode || null,
-        discount_amount: discountAmount || 0,
-        shipping_cost: shipping,
-        tax,
-        total,
-        payment_method: paymentMethod,
-        payment_status: "pending",
-        shipping_address: shippingAddress,
-        delivery_method: deliveryMethod,
-        notes,
-      })
+      .insert(orderData)
       .select()
       .single()
 
     if (orderError) {
       console.error("Order creation error:", orderError)
-      return NextResponse.json({ error: "Failed to create order" }, { status: 500 })
+      return NextResponse.json({ error: "Failed to create order", details: orderError.message }, { status: 500 })
     }
 
     // Create order items
@@ -75,33 +81,42 @@ export async function POST(request: NextRequest) {
     }
 
     // Decrease stock for each product
+    console.log("🔄 Starting stock decrease for", items.length, "items")
     for (const item of items) {
+      console.log(`📦 Processing item: ${item.name} (ID: ${item.id}) - Quantity: ${item.quantity}`)
+      
       // Get current stock
       const { data: product, error: productError } = await supabase
         .from("products")
-        .select("quantity")
+        .select("stock_quantity")
         .eq("id", item.id)
         .single()
 
       if (productError) {
-        console.error("Error fetching product stock:", productError)
+        console.error("❌ Error fetching product stock:", productError)
         continue // Continue with other items instead of failing the whole order
       }
 
+      console.log(`📊 Current stock for ${item.name}: ${product.stock_quantity}`)
+
       // Calculate new stock (ensure it doesn't go below 0)
-      const newStock = Math.max(0, (product.quantity || 0) - item.quantity)
+      const newStock = Math.max(0, (product.stock_quantity || 0) - item.quantity)
+      console.log(`🔢 New stock calculated: ${product.stock_quantity} - ${item.quantity} = ${newStock}`)
 
       // Update stock
       const { error: updateError } = await supabase
         .from("products")
-        .update({ quantity: newStock })
+        .update({ stock_quantity: newStock })
         .eq("id", item.id)
 
       if (updateError) {
-        console.error("Error updating product stock:", updateError)
+        console.error("❌ Error updating product stock:", updateError)
         // Continue with other items instead of failing the whole order
+      } else {
+        console.log(`✅ Successfully updated stock for ${item.name}: ${product.stock_quantity} → ${newStock}`)
       }
     }
+    console.log("🎉 Stock decrease process completed")
 
     // Generate reward discount code based on order total (ILS)
     let earnedDiscountCode = null
@@ -130,7 +145,7 @@ export async function POST(request: NextRequest) {
         discount_percentage: earnedDiscountPercentage,
         min_purchase: 0, // No minimum for earned codes
         order_id: order.id,
-        user_id: user?.id || null,
+        user_id: user?.id || null, // NULL for guest users, just like the order
         is_used: false,
         expires_at: expiresAt.toISOString(),
       })

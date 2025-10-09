@@ -40,7 +40,7 @@ export function CartItems() {
       const supabase = getSupabaseBrowserClient()
       const { data: product, error } = await supabase
         .from("products")
-        .select("quantity")
+        .select("stock_quantity")
         .eq("id", id)
         .single()
 
@@ -54,7 +54,7 @@ export function CartItems() {
         return
       }
 
-      const availableStock = product.quantity ?? 0
+      const availableStock = product.stock_quantity ?? 0
 
       if (newQuantity > availableStock) {
         toast({

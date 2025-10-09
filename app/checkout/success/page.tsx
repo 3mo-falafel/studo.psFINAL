@@ -22,6 +22,9 @@ export default function CheckoutSuccessPage() {
   const discountPercentage = searchParams.get("discountPercentage")
 
   useEffect(() => {
+    // Refresh all cached pages to show updated stock
+    router.refresh()
+    
     // Trigger confetti animation
     if (!showConfetti && orderId) {
       setShowConfetti(true)

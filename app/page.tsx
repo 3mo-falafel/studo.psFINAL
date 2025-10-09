@@ -9,40 +9,28 @@ import { SectionHeader } from "@/components/home/section-header"
 import { FeaturesSection } from "@/components/home/features-section"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 
+// Disable caching to get fresh stock data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function HomePage() {
   const supabase = await getSupabaseServerClient()
 
-  // Fetch featured products
-  const { data: rawFeaturedProducts } = await supabase
+  // Fetch featured products with real stock data
+  const { data: featuredProducts } = await supabase
     .from("products")
-    .select("id, name, slug, price, compare_at_price, images, quantity, category_id, is_featured, category:categories(*)")
+    .select("id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, is_featured, category:categories(*)")
     .eq("is_active", true)
     .eq("is_featured", true)
     .limit(8)
-    .then((res) => ({ data: res.data || [] }))
-    .catch(() => ({ data: [] }))
 
-  // Map quantity to stock_quantity
-  const featuredProducts = (rawFeaturedProducts || []).map((p: any) => ({
-    ...p,
-    stock_quantity: p.quantity ?? 0,
-  }))
-
-  // Fetch all products for "New Arrivals"
-  const { data: rawNewProducts } = await supabase
+  // Fetch all products for "New Arrivals" with real stock data
+  const { data: newProducts } = await supabase
     .from("products")
-    .select("id, name, slug, price, compare_at_price, images, quantity, category_id, is_featured, category:categories(*)")
+    .select("id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, is_featured, category:categories(*)")
     .eq("is_active", true)
     .order("created_at", { ascending: false })
     .limit(8)
-    .then((res) => ({ data: res.data || [] }))
-    .catch(() => ({ data: [] }))
-
-  // Map quantity to stock_quantity
-  const newProducts = (rawNewProducts || []).map((p: any) => ({
-    ...p,
-    stock_quantity: p.quantity ?? 0,
-  }))
 
   // Fetch categories
   const { data: categories } = await supabase
@@ -52,16 +40,12 @@ export default async function HomePage() {
     .is("parent_id", null)
     .order("display_order", { ascending: true })
     .limit(8)
-    .then((res) => ({ data: res.data || [] }))
-    .catch(() => ({ data: [] }))
 
   const { data: banners } = await supabase
     .from("banners")
     .select("*")
     .eq("is_active", true)
     .order("display_order", { ascending: true })
-    .then((res) => ({ data: res.data || [] }))
-    .catch(() => ({ data: [] }))
 
   // Fetch category images for hero section
   const { data: categoryImages } = await supabase
@@ -70,8 +54,6 @@ export default async function HomePage() {
     .eq("is_active", true)
     .order("category_slot", { ascending: true })
     .order("display_order", { ascending: true })
-    .then((res) => ({ data: res.data || [] }))
-    .catch(() => ({ data: [] }))
 
   return (
     <div className="min-h-screen flex flex-col">

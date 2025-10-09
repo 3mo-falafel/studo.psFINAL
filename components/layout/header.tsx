@@ -24,9 +24,11 @@ export function Header() {
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm transition-all duration-300">
         <div className="container mx-auto px-4">
-          <div className="flex h-16 md:h-20 items-center justify-between gap-4">
-            {/* Mobile menu - Left Side */}
-            <div className="flex items-center lg:hidden">
+          {/* Mobile Header: Logo row + Icons row */}
+          <div className="md:hidden">
+            {/* Top row: Menu + Logo + Icons */}
+            <div className="flex h-16 items-center justify-between">
+              {/* Mobile menu - Left Side */}
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon" className="hover:bg-primary/10 transition-colors">
@@ -56,17 +58,69 @@ export function Header() {
                   </nav>
                 </SheetContent>
               </Sheet>
+
+              {/* Logo - Centered */}
+              <Link href="/" className="flex items-center gap-2 group flex-shrink-0 absolute left-1/2 -translate-x-1/2">
+                <div className="relative w-24 h-10 transition-transform duration-300 group-hover:scale-105">
+                  <Image src="/images/studo-logo.jpg" alt="Studo.ps Logo" fill className="object-contain" priority />
+                </div>
+              </Link>
+
+              {/* Right Icons */}
+              <div className="flex items-center gap-2">
+                {/* Language Toggle */}
+                <LanguageToggle />
+
+                <Link href="/wishlist">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative hover:bg-primary/10 transition-all duration-300 hover:scale-110"
+                  >
+                    <Heart className="h-5 w-5" />
+                    {wishlistItems.length > 0 && (
+                      <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center animate-scale-in font-semibold">
+                        {wishlistItems.length}
+                      </span>
+                    )}
+                  </Button>
+                </Link>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative hover:bg-primary/10 transition-all duration-300 hover:scale-110"
+                >
+                  <div className="relative">
+                    <ShoppingCart className="h-5 w-5" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-white text-xs flex items-center justify-center animate-scale-in font-semibold shadow-lg">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                </Button>
+              </div>
             </div>
 
-            {/* Logo - Centered on Mobile, Left on Desktop */}
-            <Link href="/" className="flex items-center gap-2 group flex-shrink-0 absolute left-1/2 -translate-x-1/2 lg:relative lg:left-auto lg:translate-x-0">
-              <div className="relative w-24 h-10 md:w-32 md:h-12 transition-transform duration-300 group-hover:scale-105">
+            {/* Mobile Search Bar - Full width on second row */}
+            <div className="pb-3">
+              <SearchBar />
+            </div>
+          </div>
+
+          {/* Desktop Header: Single row */}
+          <div className="hidden md:flex h-20 items-center justify-between gap-4">
+            {/* Logo - Left on Desktop */}
+            <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
+              <div className="relative w-32 h-12 transition-transform duration-300 group-hover:scale-105">
                 <Image src="/images/studo-logo.jpg" alt="Studo.ps Logo" fill className="object-contain" priority />
               </div>
             </Link>
 
             {/* Search Bar - Desktop */}
-            <div className="hidden md:flex flex-1 max-w-2xl mx-4">
+            <div className="flex flex-1 max-w-2xl mx-4">
               <SearchBar />
             </div>
 
@@ -119,7 +173,6 @@ export function Header() {
                 href="https://instagram.com/studo.ps"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden md:block"
               >
                 <Button
                   variant="ghost"
@@ -135,7 +188,6 @@ export function Header() {
                 href="https://wa.me/972599765211"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden md:block"
               >
                 <Button
                   variant="ghost"
@@ -177,11 +229,6 @@ export function Header() {
                 </div>
               </Button>
             </div>
-          </div>
-
-          {/* Mobile Search Bar */}
-          <div className="md:hidden pb-3">
-            <SearchBar />
           </div>
         </div>
       </header>

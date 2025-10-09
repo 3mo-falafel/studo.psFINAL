@@ -7,6 +7,7 @@ export interface CartItem {
   quantity: number
   image: string
   slug: string
+  stock?: number // Optional: track available stock
 }
 
 interface CartState {
@@ -41,6 +42,11 @@ const cartSlice = createSlice({
       const existingItem = state.items.find((item) => item.id === action.payload.id)
 
       if (existingItem) {
+        // Check stock limit if stock is provided
+        if (action.payload.stock !== undefined && existingItem.quantity >= action.payload.stock) {
+          // Don't add more if we've reached stock limit
+          return
+        }
         existingItem.quantity += 1
       } else {
         state.items.push({ ...action.payload, quantity: 1 })

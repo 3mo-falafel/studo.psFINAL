@@ -24,6 +24,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch()
   const { showEnhancedToast } = useEnhancedToast()
   const wishlistItems = useAppSelector((state) => state.wishlist.items)
+  const cartItems = useAppSelector((state) => state.cart.items) // Get cart items for stock validation
 
   const isInWishlist = wishlistItems.some((item) => item.id === product.id)
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price
@@ -32,6 +33,29 @@ export function ProductCard({ product }: ProductCardProps) {
     : 0
 
   const handleAddToCart = () => {
+    // Check stock availability
+    const stock = product.stock_quantity ?? 0
+    const existingItem = cartItems.find(item => item.id === product.id)
+    const currentQuantityInCart = existingItem ? existingItem.quantity : 0
+    
+    if (stock <= 0) {
+      showEnhancedToast({
+        title: t("outOfStockLabel"),
+        description: t("backInSoon"),
+        variant: "destructive",
+      })
+      return
+    }
+    
+    if (currentQuantityInCart >= stock) {
+      showEnhancedToast({
+        title: t("stockLimitReached"),
+        description: `Maximum stock (${stock}) reached in cart`,
+        variant: "destructive",
+      })
+      return
+    }
+    
     dispatch(
       addToCart({
         id: product.id,
@@ -39,6 +63,7 @@ export function ProductCard({ product }: ProductCardProps) {
         price: product.price,
         image: product.images[0] || "/placeholder.svg?height=400&width=400",
         slug: product.slug,
+        stock: stock, // Pass stock for validation
       }),
     )
 
@@ -47,7 +72,8 @@ export function ProductCard({ product }: ProductCardProps) {
       productName: product.name,
       productImage: product.images[0] || "/placeholder.svg?height=400&width=400",
       action: "viewCart",
-      variant: "default"
+      variant: "default",
+      showSuccessIcon: true
     })
   }
 
@@ -86,7 +112,8 @@ export function ProductCard({ product }: ProductCardProps) {
         title: t("addedToWishlist"),
         productName: product.name,
         productImage: product.images[0] || "/placeholder.svg?height=400&width=400",
-        action: "viewWishlist"
+        action: "viewWishlist",
+        showSuccessIcon: true
       })
     }
   }
@@ -138,7 +165,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Stock Badge */}
-        <StockBadge quantity={product.quantity ?? 0} className="text-xs" showIcon={true} />
+        <StockBadge quantity={product.stock_quantity ?? 0} className="text-xs" showIcon={true} />
       </CardContent>
 
       <CardFooter className="p-3 md:p-4 pt-0 flex gap-2">

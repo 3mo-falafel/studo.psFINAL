@@ -6,6 +6,7 @@ import { Tajawal } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ReduxProvider } from "@/components/providers/redux-provider"
 import { LanguageProvider } from "@/lib/contexts/language-context"
+import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
 import "./globals.css"
 
@@ -35,6 +36,7 @@ export default function RootLayout({
             <ReduxProvider>{children}</ReduxProvider>
           </LanguageProvider>
           <Analytics />
+          <Toaster />
         </Suspense>
       </body>
     </html>
