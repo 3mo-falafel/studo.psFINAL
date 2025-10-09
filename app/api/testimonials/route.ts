@@ -7,6 +7,15 @@ export async function POST(request: NextRequest) {
   console.log("🔍 Testimonial API - POST request received")
   
   try {
+    const supabase = await getSupabaseServerClient()
+
+    // Get user (may be null for guest testimonials - EXACTLY LIKE ORDERS)
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    console.log("👤 User context:", { userId: user?.id || 'guest', email: user?.email || 'anonymous' })
+    
     const body = await request.json()
     console.log("📦 Request body:", body)
     
@@ -29,31 +38,39 @@ export async function POST(request: NextRequest) {
     }
 
     console.log("✅ Validation passed")
-    console.log("🔌 Creating Supabase client...")
-    
-    const supabase = await getSupabaseServerClient()
 
-    console.log("💾 Inserting testimonial into database...")
+    // EXACTLY LIKE ORDERS: Prepare testimonial data (without user_id for now)
+    const testimonialData: any = {
+      customer_name: customerName,
+      rating,
+      comment,
+      is_approved: false,
+    }
+
+    console.log("💾 Inserting testimonial with simplified ORDERS pattern...")
+    console.log("📊 Testimonial data:", testimonialData)
+    
     const { data, error } = await supabase
       .from("site_testimonials")
-      .insert({
-        customer_name: customerName,
-        rating,
-        comment,
-        is_approved: false,
-      })
+      .insert(testimonialData)
       .select()
       .single()
 
     if (error) {
       console.error("❌ Database error:", error)
+      console.log("🔍 DEBUGGING INFO:")
+      console.log("- Error code:", error.code)
+      console.log("- Error message:", error.message)
+      console.log("- Error details:", error.details)
+      console.log("- Error hint:", error.hint)
+      
       return NextResponse.json(
         { error: `Failed to submit testimonial: ${error.message}` },
         { status: 500 }
       )
     }
 
-    console.log("✅ Testimonial inserted successfully:", data)
+    console.log("✅ Testimonial inserted successfully using simplified ORDERS pattern:", data)
     return NextResponse.json({ success: true, data })
   } catch (error) {
     console.error("❌ Testimonial API error:", error)
