@@ -222,13 +222,13 @@ const translations: Record<Language, Record<string, string>> = {
     // Category Names (Database categories translated)
     "ipad-accessories": "إكسسوارات iPad",
     "airpods": "سماعات رأس",
-    "phone-accessories": "إكسسوارات الهاتف",
+    "phone-accessories": "إكسسوارات الهاتف (قريباً)",
     "computer-accessories": "إكسسوارات الكمبيوتر",
     "chargers": "شواحن",
-    "hard-disks": "أقراص صلبة",
+    "hard-disks": "بطاقات فلاش",
     "printed-stuff": "منتجات مطبوعة",
     "gift-packages": "باقات هدايا",
-    "bags": "قريباً",
+    "bags": "حقائب",
     
     // Home Features
     qualityGuaranteedTitle: "ضمان الجودة",
@@ -535,13 +535,13 @@ const translations: Record<Language, Record<string, string>> = {
     // Category Names (Database categories translated)
     "ipad-accessories": "iPad Accessories",
     "airpods": "Headphones",
-    "phone-accessories": "Phone Accessories",
+    "phone-accessories": "Phone Accessories (Coming Soon)",
     "computer-accessories": "Computer Accessories",
     "chargers": "Chargers",
-    "hard-disks": "Hard Disks",
+    "hard-disks": "Flash Cards",
     "printed-stuff": "Printed Products",
     "gift-packages": "Gift Packages",
-    "bags": "Coming Soon",
+    "bags": "Bags",
     
     // Home Features
     qualityGuaranteedTitle: "Quality Guaranteed",

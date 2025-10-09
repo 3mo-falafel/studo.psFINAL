@@ -13,7 +13,7 @@ export function CartSummary() {
   const { t } = useLanguage()
 
   const subtotal = total
-  const shipping = subtotal >= 5000 ? 0 : 250
+  const shipping = 0 // Always free shipping
   const tax = Math.round(subtotal * 0.0) // 0% tax for now
   const grandTotal = subtotal + shipping + tax
 
@@ -32,10 +32,8 @@ export function CartSummary() {
 
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">{t("shipping")}</span>
-          <span className="font-medium">{shipping === 0 ? t("free") : `₪ ${shipping.toLocaleString()}`}</span>
+          <span className="font-medium">{t("free")}</span>
         </div>
-
-        {shipping > 0 && <p className="text-xs text-muted-foreground">{t("freeShippingOver")}</p>}
 
         {tax > 0 && (
           <div className="flex justify-between text-sm">

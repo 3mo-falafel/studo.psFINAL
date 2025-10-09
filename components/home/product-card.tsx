@@ -14,6 +14,7 @@ import { addToWishlist, removeFromWishlist } from "@/lib/redux/slices/wishlist-s
 import type { Product } from "@/lib/types/database"
 import { useEnhancedToast } from "@/hooks/use-enhanced-toast"
 import { useLanguage } from "@/lib/contexts/language-context"
+import { useProductStock } from "@/hooks/use-realtime-stock"
 
 interface ProductCardProps {
   product: Product
@@ -25,6 +26,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const { showEnhancedToast } = useEnhancedToast()
   const wishlistItems = useAppSelector((state) => state.wishlist.items)
   const cartItems = useAppSelector((state) => state.cart.items) // Get cart items for stock validation
+  
+  // Get real-time stock data
+  const { stock, isOutOfStock, isLowStock } = useProductStock(product.id, product.stock_quantity)
 
   const isInWishlist = wishlistItems.some((item) => item.id === product.id)
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price
@@ -33,12 +37,10 @@ export function ProductCard({ product }: ProductCardProps) {
     : 0
 
   const handleAddToCart = () => {
-    // Check stock availability
-    const stock = product.stock_quantity ?? 0
     const existingItem = cartItems.find(item => item.id === product.id)
     const currentQuantityInCart = existingItem ? existingItem.quantity : 0
     
-    if (stock <= 0) {
+    if (isOutOfStock) {
       showEnhancedToast({
         title: t("outOfStockLabel"),
         description: t("backInSoon"),
@@ -63,7 +65,7 @@ export function ProductCard({ product }: ProductCardProps) {
         price: product.price,
         image: product.images[0] || "/placeholder.svg?height=400&width=400",
         slug: product.slug,
-        stock: stock, // Pass stock for validation
+        stock: stock, // Pass real-time stock for validation
       }),
     )
 
@@ -164,18 +166,18 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {/* Stock Badge */}
-        <StockBadge quantity={product.stock_quantity ?? 0} className="text-xs" showIcon={true} />
+        {/* Stock Badge - Using Real-Time Stock */}
+        <StockBadge quantity={stock} className="text-xs" showIcon={true} />
       </CardContent>
 
       <CardFooter className="p-3 md:p-4 pt-0 flex gap-2">
         <Button
           className="flex-1 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md text-xs md:text-sm h-8 md:h-10"
           onClick={handleAddToCart}
-          disabled={product.quantity === 0}
+          disabled={isOutOfStock}
         >
           <ShoppingCart className="h-3 md:h-4 w-3 md:w-4 ml-1 md:ml-2" />
-          {t("addToCart")}
+          {isOutOfStock ? t("outOfStockLabel") : t("addToCart")}
         </Button>
         <Button
           variant={isInWishlist ? "default" : "outline"}

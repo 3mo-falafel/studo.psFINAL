@@ -23,10 +23,13 @@ export interface Product {
   barcode?: string
   quantity: number // Legacy field name (for backwards compatibility)
   stock_quantity: number // Actual database field
+  stock_status?: string // Stock status: 'in_stock' | 'low_stock' | 'out_of_stock'
   category_id?: string
   images: string[]
   is_featured: boolean
   is_active: boolean
+  best_seller?: boolean // Best seller badge
+  trending?: boolean // Trending badge
   meta_title?: string
   meta_description?: string
   created_at: string

@@ -1,17 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Heart, ShoppingCart, Minus, Plus, Package, Truck, Shield } from "lucide-react"
+import { Heart, ShoppingCart, Minus, Plus, Package, Truck, Shield, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { formatPrice } from "@/lib/utils/currency"
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks"
 import { addToCart } from "@/lib/redux/slices/cart-slice"
 import { addToWishlist, removeFromWishlist } from "@/lib/redux/slices/wishlist-slice"
 import { useEnhancedToast } from "@/hooks/use-enhanced-toast"
 import { useLanguage } from "@/lib/contexts/language-context"
+import { useProductStock } from "@/hooks/use-realtime-stock"
 import type { Product } from "@/lib/types/database"
 
 interface ProductInfoProps {
@@ -25,6 +27,18 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const { t } = useLanguage()
   const wishlistItems = useAppSelector((state) => state.wishlist.items)
   const cartItems = useAppSelector((state) => state.cart.items) // Get cart items for stock validation
+  
+  // Get real-time stock data
+  const { stock, isOutOfStock, isLowStock } = useProductStock(product.id, product.stock_quantity)
+  
+  // Reset quantity if it exceeds available stock
+  useEffect(() => {
+    if (quantity > stock && stock > 0) {
+      setQuantity(stock)
+    } else if (stock === 0) {
+      setQuantity(1) // Reset to 1 when out of stock
+    }
+  }, [stock, quantity])
 
   const isInWishlist = wishlistItems.some((item) => item.id === product.id)
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price
@@ -33,11 +47,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
     : 0
 
   const handleAddToCart = () => {
-    // Get stock with null safety
-    const stock = product.stock_quantity ?? 0
-    
     // Check if stock is available
-    if (stock <= 0) {
+    if (isOutOfStock) {
       showEnhancedToast({
         title: t("outOfStockLabel"),
         description: t("backInSoon"),
@@ -68,7 +79,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           price: product.price,
           image: product.images[0] || "/placeholder.svg?height=400&width=400",
           slug: product.slug,
-          stock: stock, // Pass stock for validation
+          stock: stock, // Pass real-time stock for validation
         }),
       )
     }
@@ -112,7 +123,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
   }
 
   const incrementQuantity = () => {
-    const stock = product.stock_quantity ?? 0
     if (quantity < stock) {
       setQuantity(quantity + 1)
     } else {
@@ -129,11 +139,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
       setQuantity(quantity - 1)
     }
   }
-
-  // Calculate stock status
-  const stock = product.stock_quantity ?? 0
-  const isOutOfStock = stock <= 0
-  const isLowStock = stock > 0 && stock < 10
 
   return (
     <div className="space-y-6">
@@ -172,6 +177,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div>
         {isOutOfStock ? (
           <Badge variant="outline" className="text-destructive border-destructive">
+            <AlertCircle className="h-3 w-3 ml-1" />
             {t("outOfStockLabel")}
           </Badge>
         ) : isLowStock ? (
@@ -188,6 +194,16 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       <Separator />
+      
+      {/* Out of Stock Alert */}
+      {isOutOfStock && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {t("outOfStockMessage") || "This product is currently out of stock. Please check back later or add it to your wishlist to be notified when it's available again."}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Quantity Selector */}
       {!isOutOfStock && (

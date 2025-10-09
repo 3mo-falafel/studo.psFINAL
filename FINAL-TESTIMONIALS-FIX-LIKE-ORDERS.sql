@@ -94,11 +94,33 @@ CREATE POLICY "testimonials_delete_for_auth" ON site_testimonials
 -- (Orders work because anon users can insert - apply same to testimonials)
 GRANT INSERT ON site_testimonials TO anon;
 GRANT SELECT ON site_testimonials TO anon;
-GRANT USAGE ON SEQUENCE site_testimonials_id_seq TO anon;
+
+-- Grant sequence permissions only if sequence exists
+DO $$
+DECLARE
+    seq_name TEXT;
+BEGIN
+    -- Find the actual sequence name for the id column
+    SELECT pg_get_serial_sequence('site_testimonials', 'id') INTO seq_name;
+    
+    IF seq_name IS NOT NULL THEN
+        EXECUTE format('GRANT USAGE ON SEQUENCE %s TO anon', seq_name);
+        EXECUTE format('GRANT USAGE ON SEQUENCE %s TO authenticated', seq_name);
+        RAISE NOTICE 'Granted sequence permissions on: %', seq_name;
+    ELSE
+        -- Try common sequence names
+        IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'site_testimonials_id_seq') THEN
+            GRANT USAGE ON SEQUENCE site_testimonials_id_seq TO anon;
+            GRANT USAGE ON SEQUENCE site_testimonials_id_seq TO authenticated;
+            RAISE NOTICE 'Granted permissions on site_testimonials_id_seq';
+        ELSE
+            RAISE NOTICE 'No sequence found for site_testimonials.id - this is OK if using UUID or other non-serial ID';
+        END IF;
+    END IF;
+END $$;
 
 -- Grant full permissions to authenticated users (for admin functions)
 GRANT ALL ON site_testimonials TO authenticated;
-GRANT USAGE ON SEQUENCE site_testimonials_id_seq TO authenticated;
 
 COMMIT;
 
@@ -125,7 +147,13 @@ BEGIN
     END;
 END $$;
 
--- Step 7: Show final configuration
+-- Step 7: Show final configuration and success message
+DO $$
+BEGIN
+    RAISE NOTICE '🎉 TESTIMONIALS FIXED using the exact same pattern that works for orders!';
+END $$;
+
+-- Show final policy configuration
 SELECT 
     'TESTIMONIALS CONFIGURATION' as status,
     policyname as policy_name,
@@ -135,5 +163,3 @@ SELECT
 FROM pg_policies 
 WHERE tablename = 'site_testimonials'
 ORDER BY policyname;
-
-RAISE NOTICE '🎉 TESTIMONIALS FIXED using the exact same pattern that works for orders!';

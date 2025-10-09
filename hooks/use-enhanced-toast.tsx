@@ -110,7 +110,7 @@ export function useEnhancedToast() {
       description: enhancedDescription,
       action: actionButton,
       variant,
-      duration: 4000, // Show for 4 seconds
+      duration: 3000, // Show for 3 seconds
     })
   }
 

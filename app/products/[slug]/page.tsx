@@ -35,11 +35,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   // Extract category from array (Supabase returns it as array when using join)
   const category = Array.isArray(rawProduct.category) ? rawProduct.category[0] : rawProduct.category
 
-  // Map quantity to stock_quantity for code consistency
+  // Use the correct stock_quantity field (not the legacy quantity field)
   const product = {
     ...rawProduct,
     category,
-    stock_quantity: rawProduct.quantity ?? 0,
+    stock_quantity: rawProduct.stock_quantity ?? rawProduct.quantity ?? 0,
   }
 
   // Fetch suggested products using smart SQL function
@@ -49,10 +49,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       p_limit: 8
     })
 
-  // Map quantity field for suggested products
+  // Use the correct stock_quantity field for suggested products
   const suggestedProducts = (suggestedProductsData || []).map((p: any) => ({
     ...p,
-    stock_quantity: p.quantity ?? 0,
+    stock_quantity: p.stock_quantity ?? p.quantity ?? 0,
   }))
 
   // Fetch approved reviews for this product

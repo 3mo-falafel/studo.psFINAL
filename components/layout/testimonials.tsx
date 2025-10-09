@@ -213,13 +213,13 @@ export function TestimonialsDisplay({ testimonials }: TestimonialsDisplayProps) 
           <div 
             className="flex gap-6 animate-scroll-testimonials hover:[animation-play-state:paused]"
             style={{
-              animationDuration: `${testimonials.length * 5}s`
+              animationDuration: `${testimonials.length * 3}s`
             }}
           >
             {duplicatedTestimonials.map((testimonial, index) => (
               <Card 
                 key={`${testimonial.id}-${index}`} 
-                className="flex-shrink-0 w-[350px] bg-gradient-to-br from-background to-muted/20 hover:shadow-xl transition-all duration-300 border-muted/50 hover:scale-105"
+                className="flex-shrink-0 w-[280px] sm:w-[350px] bg-gradient-to-br from-background to-muted/20 hover:shadow-xl transition-all duration-300 border-muted/50 hover:scale-105"
               >
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-1 mb-3 justify-center">

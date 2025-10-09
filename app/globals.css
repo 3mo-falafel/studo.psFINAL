@@ -262,15 +262,16 @@
 
   @keyframes scroll-testimonials {
     0% {
-      transform: translateX(0);
+      transform: translateX(0) translateZ(0);
     }
     100% {
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateZ(0);
     }
   }
 
   .animate-scroll-testimonials {
     animation: scroll-testimonials linear infinite;
+    will-change: transform;
   }
 
   .delay-100 {
