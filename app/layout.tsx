@@ -18,9 +18,18 @@ const tajawal = Tajawal({
 })
 
 export const metadata: Metadata = {
-  title: "Studo.ps - إكسسوارات تقنية أصلية",
+  title: "Studo.ps - ستيودو",
   description: "تسوق إكسسوارات آيباد، حقائب لابتوب، كفرات إيربودز، شواحن والمزيد - منتجات أصلية 100%",
   generator: "v0.app",
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: '/favicon.png',
+    shortcut: '/favicon.png',
+  },
 }
 
 export default function RootLayout({
