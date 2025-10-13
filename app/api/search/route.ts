@@ -7,19 +7,22 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get("q")
     const category = searchParams.get("category")
 
-    if (!query || query.trim().length < 2) {
+
+    // Show results as soon as user types (even 1 char)
+    if (!query || query.trim().length < 1) {
       return NextResponse.json({ categories: [], products: [] })
     }
 
     const supabase = await getSupabaseServerClient()
 
-    // Search for matching categories FIRST
+    // Search for matching categories FIRST (show more than 3)
     const { data: categoriesData } = await supabase
       .from("categories")
       .select("id, name, slug, description")
       .eq("is_active", true)
-      .ilike("name", `%${query}%`)
-      .limit(3)
+      .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+      .order("name", { ascending: true })
+      .limit(10)
 
     // Build product search query
     let dbQuery = supabase
@@ -41,7 +44,8 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const { data: productsData, error } = await dbQuery.limit(10)
+  // Show more products for better search experience
+  const { data: productsData, error } = await dbQuery.limit(15)
 
     if (error) {
       console.error("Search error:", error)

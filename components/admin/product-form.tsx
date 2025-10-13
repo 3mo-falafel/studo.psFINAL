@@ -16,6 +16,13 @@ import Image from "next/image"
 interface Category {
   id: string
   name: string
+  parent_id?: string
+}
+
+interface Subcategory {
+  id: string
+  name: string
+  parent_id: string
 }
 
 interface ProductFormProps {
@@ -35,11 +42,35 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const [price, setPrice] = useState(product?.price || "")
   const [compareAtPrice, setCompareAtPrice] = useState(product?.compare_at_price || "")
   const [categoryId, setCategoryId] = useState(product?.category_id || "")
+  const [subcategoryId, setSubcategoryId] = useState(product?.subcategory_id || "")
   const [images, setImages] = useState<string[]>(product?.images || [])
   const [isFeatured, setIsFeatured] = useState(product?.is_featured || false)
   const [isActive, setIsActive] = useState(product?.is_active ?? true)
   const [sku, setSku] = useState(product?.sku || "")
   const [quantity, setQuantity] = useState(product?.quantity || 0)
+
+  // Subcategories state
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([])
+
+  // Filter subcategories for selected main category
+  const filteredSubcategories = categories.filter((cat) => cat.parent_id === categoryId)
+
+  // Filter main categories (no parent_id), remove 'Flash Cards' and 'Headphones' without subcategories
+  const mainCategories = categories.filter((cat) => {
+    if (cat.parent_id) return false;
+    if (cat.name === "Flash Cards") return false;
+    if (cat.name === "Headphones") {
+      // Only show if it has subcategories
+      const hasSub = categories.some((sub) => sub.parent_id === cat.id);
+      return hasSub;
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    // Reset subcategory when main category changes
+    setSubcategoryId("")
+  }, [categoryId])
 
   const generateSlug = (text: string) => {
     return text
@@ -96,8 +127,14 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+
     if (!name || !price || !categoryId) {
       alert("Please fill in all required fields")
+      return
+    }
+    // If subcategories exist for this category, require subcategory
+    if (subcategories.length > 0 && !subcategoryId) {
+      alert("Please select a subcategory")
       return
     }
 
@@ -112,6 +149,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         price: parseFloat(price),
         compare_at_price: compareAtPrice ? parseFloat(compareAtPrice) : null,
         category_id: categoryId,
+        subcategory_id: subcategoryId || null,
         images,
         is_featured: isFeatured,
         is_active: isActive,
@@ -316,25 +354,45 @@ export function ProductForm({ product, categories }: ProductFormProps) {
             </CardContent>
           </Card>
 
-          {/* Category */}
+
+          {/* Category & Subcategory */}
           <Card>
             <CardHeader>
               <CardTitle>Category</CardTitle>
             </CardHeader>
-            <CardContent>
-              <Label htmlFor="category">Select Category *</Label>
-              <Select value={categoryId} onValueChange={setCategoryId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="category">Select Category *</Label>
+                <Select value={categoryId} onValueChange={(val) => { setCategoryId(val); setSubcategoryId(""); }}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mainCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              {categoryId && filteredSubcategories.length > 0 && (
+                <div>
+                  <Label htmlFor="subcategory">Select Subcategory *</Label>
+                  <Select value={subcategoryId} onValueChange={setSubcategoryId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose a subcategory" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredSubcategories.map((subcategory) => (
+                        <SelectItem key={subcategory.id} value={subcategory.id}>
+                          {subcategory.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </CardContent>
           </Card>
 

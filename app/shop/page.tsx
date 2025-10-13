@@ -31,7 +31,10 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   // Build query - select stock_quantity and stock_status for real inventory
   let query = supabase
     .from("products")
-    .select("id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, is_featured, best_seller, trending, category:categories(*)")
+    .select(`id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, subcategory_id, is_featured, best_seller, trending,
+      category:categories!products_category_id_fkey(name, id),
+      subcategory:categories!products_subcategory_id_fkey(name, id)
+    `)
     .eq("is_active", true)
 
   // Apply special filters

@@ -19,7 +19,10 @@ export default async function HomePage() {
   // Fetch featured products with real stock data
   const { data: featuredProducts } = await supabase
     .from("products")
-    .select("id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, is_featured, category:categories(*)")
+    .select(`id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, subcategory_id, is_featured,
+      category:categories!products_category_id_fkey(name, id),
+      subcategory:categories!products_subcategory_id_fkey(name, id)
+    `)
     .eq("is_active", true)
     .eq("is_featured", true)
     .limit(8)
@@ -27,7 +30,10 @@ export default async function HomePage() {
   // Fetch all products for "New Arrivals" with real stock data
   const { data: newProducts } = await supabase
     .from("products")
-    .select("id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, is_featured, category:categories(*)")
+    .select(`id, name, slug, price, compare_at_price, images, stock_quantity, stock_status, category_id, subcategory_id, is_featured,
+      category:categories!products_category_id_fkey(name, id),
+      subcategory:categories!products_subcategory_id_fkey(name, id)
+    `)
     .eq("is_active", true)
     .order("created_at", { ascending: false })
     .limit(8)

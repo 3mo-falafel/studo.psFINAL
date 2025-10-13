@@ -3,7 +3,7 @@ INSERT INTO public.categories (name, slug, description, display_order) VALUES
   ('iPad Accessories', 'ipad-accessories', 'Cases, covers, and accessories for iPad', 1),
   ('Bags (Coming Soon)', 'bags', 'Laptop bags, backpacks, and carrying cases', 2),
   ('Headphones', 'airpods', 'Headphones and wireless earbuds', 3),
-  ('Phone Accessories', 'phone-accessories', 'Cases, chargers, and phone accessories', 4),
+  ('IPTV Subscriptions', 'phone-accessories', 'Advanced TV streaming service with 7,000+ channels, 7,000+ series, and 18,000+ movies in HD & 4K quality. Compatible with all devices (phone, tablet, smart TV, computer), 24/7 technical support, continuous content updates, easy-to-use interface, and competitive pricing with flexible plans.', 4),
   ('Computer Accessories', 'computer-accessories', 'Keyboards, mice, and computer peripherals', 5),
   ('Chargers', 'chargers', 'Fast chargers and charging cables', 6),
   ('Hard Disks', 'hard-disks', 'External storage and hard drives', 7),

@@ -23,7 +23,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
   // Fetch product
   const { data: rawProduct } = await supabase
     .from("products")
-    .select("*, category:categories(*)")
+    .select(`*,
+      category:categories!products_category_id_fkey(name, id),
+      subcategory:categories!products_subcategory_id_fkey(name, id)
+    `)
     .eq("slug", slug)
     .eq("is_active", true)
     .single()

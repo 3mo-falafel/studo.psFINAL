@@ -22,9 +22,13 @@ export default async function AdminProductsPage() {
     redirect("/")
   }
 
+
   const { data: rawProducts, error } = await supabase
     .from("products")
-    .select("id, name, slug, price, quantity, images, is_featured, categories(name)")
+    .select(`id, name, slug, price, quantity, images, is_featured, category_id, subcategory_id, 
+      category:categories!products_category_id_fkey(name, id),
+      subcategory:categories!products_subcategory_id_fkey(name, id)
+    `)
     .order("created_at", { ascending: false })
 
   if (error) {
@@ -40,7 +44,8 @@ export default async function AdminProductsPage() {
     stock_quantity: p.quantity ?? 0, // Map 'quantity' to 'stock_quantity'
     images: Array.isArray(p.images) ? p.images : [],
     is_featured: p.is_featured ?? false,
-    categories: Array.isArray(p.categories) && p.categories.length > 0 ? p.categories[0] : null,
+    category: p.category ? p.category : null,
+    subcategory: p.subcategory ? p.subcategory : null,
   }))
 
   return (

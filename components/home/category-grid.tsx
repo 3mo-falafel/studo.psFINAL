@@ -23,7 +23,7 @@ const categoryIcons: Record<string, string> = {
 
 const categoryImages: Record<string, string> = {
   "ipad-accessories": "https://alephksa.com/cdn/shop/files/IMG-16727206_m_jpg_1_82aff6da-5d37-46a6-b718-e689d70d969d_533x.jpg?v=1741104644",
-  "phone-accessories": "https://thumbs.dreamstime.com/b/assorted-smartphone-accessories-arranged-white-background-various-phone-cases-colors-like-pink-blue-beige-black-379556645.jpg",
+  "phone-accessories": "https://play-lh.googleusercontent.com/TtmQHrL1HRwBzyMSkT5XOqZZcGDqjy9265IqSEKpgKxJDgSkZhXRHuRa-eSwWzPZqW0",
   bags: "https://eu.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-discovery-work-backpack--M15259_PM2_Front%20view.jpg",
   airpods: "https://assets.myntassets.com/h_1440,q_75,w_1080/v1/assets/images/25958266/2024/3/16/31fd32e3-c12d-4d08-8c4d-2527a534114a1710561034921-JBL-Black-Tune-720BT-76Hr-Playtime-Quick-Charge-Multi-Connec-1.jpg",
   "computer-accessories": "https://png.pngtree.com/thumb_back/fh260/background/20231003/pngtree-stylish-minimalistic-white-workspace-with-laptop-and-accessories-in-top-view-image_13563503.png",

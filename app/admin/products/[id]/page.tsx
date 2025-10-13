@@ -33,10 +33,11 @@ export default async function EditProductPage({ params }: { params: { id: string
     notFound()
   }
 
-  // Fetch categories for the select dropdown
+
+  // Fetch all categories (main and subcategories)
   const { data: categories } = await supabase
     .from("categories")
-    .select("id, name")
+    .select("id, name, parent_id")
     .eq("is_active", true)
     .order("name")
 

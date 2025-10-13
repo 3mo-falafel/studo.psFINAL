@@ -222,13 +222,47 @@ const translations: Record<Language, Record<string, string>> = {
     // Category Names (Database categories translated)
     "ipad-accessories": "إكسسوارات iPad",
     "airpods": "سماعات رأس",
-    "phone-accessories": "إكسسوارات الهاتف (قريباً)",
+    "phone-accessories": "اشتراكات IPTV",
+    "phone-accessories-description": "خدمة بث تلفزيوني متطورة توفر أكثر من 7,000 قناة و7,000 مسلسل و18,000 فيلم بجودة HD و4K. متوافق مع جميع الأجهزة مع دعم فني 24/7 وأسعار تنافسية.",
     "computer-accessories": "إكسسوارات الكمبيوتر",
     "chargers": "شواحن",
     "hard-disks": "بطاقات فلاش",
     "printed-stuff": "منتجات مطبوعة",
     "gift-packages": "باقات هدايا",
     "bags": "حقائب",
+    
+    // iPad Subcategories
+    "pencils": "أقلام iPad",
+    "keyboards-mice": "ماوسات و كيبوردات",
+    "stands": "ستاندات",
+    "cases": "كفرات (قريباً)",
+    
+
+  // Computer Accessories Subcategories
+  "mice": "ماوسات",
+  "keyboards": "كيبوردات",
+  "speakers": "سماعات",
+  "mouse-pads": "ماوس بادات",
+  "computer-stands": "ستاندات كمبيوتر",
+
+  // Bags Subcategories
+  "backpacks": "حقائب ظهر",
+  "laptop-bags": "حقائب لابتوب",
+  "calvin-klein-bag": "حقيبة كالفن كلاين",
+
+  // Headphones Subcategories
+  "wireless-headphones": "سماعات رأس لاسلكية",
+  "wireless-airpods": "ايربودز لاسلكية",
+  "gaming-headphones": "سماعات ألعاب",
+  "wired-headphones": "سماعات رأس سلكية",
+
+  // Hard Disks Subcategories
+  "flash-drive": "فلاش درايف",
+  "hard-drive": "هارد درايف",
+  "memory-card": "كرت ذاكرة",
+    
+    "filterBySubcategory": "تصفية حسب الفئة الفرعية",
+    "comingSoon": "قريباً",
     
     // Home Features
     qualityGuaranteedTitle: "ضمان الجودة",
@@ -535,13 +569,22 @@ const translations: Record<Language, Record<string, string>> = {
     // Category Names (Database categories translated)
     "ipad-accessories": "iPad Accessories",
     "airpods": "Headphones",
-    "phone-accessories": "Phone Accessories (Coming Soon)",
+    "phone-accessories": "IPTV Subscriptions",
+    "phone-accessories-description": "Advanced TV streaming service with 7,000+ channels, 7,000+ series, and 18,000+ movies in HD & 4K quality. Compatible with all devices, 24/7 support, and competitive pricing.",
     "computer-accessories": "Computer Accessories",
     "chargers": "Chargers",
     "hard-disks": "Flash Cards",
     "printed-stuff": "Printed Products",
     "gift-packages": "Gift Packages",
     "bags": "Bags",
+    
+    // iPad Subcategories
+    "pencils": "iPad Pencils",
+    "keyboards-mice": "Keyboards and Mice",
+    "stands": "Stands",
+    "cases": "Cases (Coming Soon)",
+    "filterBySubcategory": "Filter by Subcategory",
+    "comingSoon": "Coming Soon",
     
     // Home Features
     qualityGuaranteedTitle: "Quality Guaranteed",
