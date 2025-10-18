@@ -50,8 +50,8 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const [quantity, setQuantity] = useState(product?.quantity || 0)
 
 
-  // Only show main categories (no parent_id)
-  const mainCategories = categories.filter((cat) => !cat.parent_id)
+  // Only show main categories (no parent_id and not themselves a subcategory)
+  const mainCategories = categories.filter((cat) => !cat.parent_id && !categories.some((c) => c.id !== cat.id && c.parent_id === cat.id))
 
   // Only show subcategories of the selected main category
   const filteredSubcategories = categories.filter((cat) => cat.parent_id === categoryId)
