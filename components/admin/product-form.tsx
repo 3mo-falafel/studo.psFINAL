@@ -50,20 +50,21 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const [quantity, setQuantity] = useState(product?.quantity || 0)
 
 
-  // Filter subcategories for selected main category
+  // Only show main categories (no parent_id)
+  const mainCategories = categories.filter((cat) => !cat.parent_id)
+
+  // Only show subcategories of the selected main category
   const filteredSubcategories = categories.filter((cat) => cat.parent_id === categoryId)
 
-  // Filter main categories (no parent_id), remove 'Flash Cards' and 'Headphones' without subcategories
-  const mainCategories = categories.filter((cat) => {
-    if (cat.parent_id) return false;
-    if (cat.name === "Flash Cards") return false;
-    if (cat.name === "Headphones") {
-      // Only show if it has subcategories
-      const hasSub = categories.some((sub) => sub.parent_id === cat.id);
-      return hasSub;
+  // When editing, if categoryId is not set but subcategoryId is, set categoryId to the parent of the subcategory
+  useEffect(() => {
+    if (!categoryId && subcategoryId) {
+      const subcat = categories.find((cat) => cat.id === subcategoryId)
+      if (subcat && subcat.parent_id) {
+        setCategoryId(subcat.parent_id)
+      }
     }
-    return true;
-  });
+  }, [categoryId, subcategoryId, categories])
 
 
   // When editing, ensure subcategory is valid for the selected main category
