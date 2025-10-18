@@ -49,8 +49,6 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const [sku, setSku] = useState(product?.sku || "")
   const [quantity, setQuantity] = useState(product?.quantity || 0)
 
-  // Subcategories state
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([])
 
   // Filter subcategories for selected main category
   const filteredSubcategories = categories.filter((cat) => cat.parent_id === categoryId)
@@ -67,9 +65,18 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     return true;
   });
 
+
+  // When editing, ensure subcategory is valid for the selected main category
   useEffect(() => {
-    // Reset subcategory when main category changes
-    setSubcategoryId("")
+    // If the current subcategoryId is not in the filtered list, reset it
+    if (subcategoryId && !filteredSubcategories.some((sub) => sub.id === subcategoryId)) {
+      setSubcategoryId("");
+    }
+  }, [categoryId, subcategoryId, filteredSubcategories])
+
+  // Reset subcategory when main category changes (add/edit)
+  useEffect(() => {
+    setSubcategoryId("");
   }, [categoryId])
 
   // Generate a completely random slug (not based on product name)
@@ -132,7 +139,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       return
     }
     // If subcategories exist for this category, require subcategory
-    if (subcategories.length > 0 && !subcategoryId) {
+    if (filteredSubcategories.length > 0 && !subcategoryId) {
       alert("Please select a subcategory")
       return
     }
