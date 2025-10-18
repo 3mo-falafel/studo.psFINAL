@@ -72,11 +72,10 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     setSubcategoryId("")
   }, [categoryId])
 
-  const generateSlug = (text: string) => {
-    return text
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
+  // Generate a completely random slug (not based on product name)
+  const generateSlug = () => {
+    // Use a random alphanumeric string with timestamp for uniqueness
+    return `${Math.random().toString(36).substring(2, 10)}-${Date.now()}`
   }
 
   const uploadImage = async (file: File): Promise<string | null> => {
@@ -141,7 +140,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     setLoading(true)
 
     try {
-      const slug = generateSlug(name)
+  const slug = generateSlug()
       const productData = {
         name,
         slug,
