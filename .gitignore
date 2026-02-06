@@ -16,8 +16,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
-.env*
+# env files (CRITICAL: Never commit credentials)
+.env
+.env.*
+!.env.example
 
 # vercel
 .vercel
@@ -25,3 +27,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Sensitive files - NEVER commit these
+*.pem
+*.key
+secrets/
